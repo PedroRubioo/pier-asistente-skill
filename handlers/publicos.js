@@ -7,6 +7,7 @@ const { PIER_WEB, PIER_DIRECCION, PIER_TELEFONO } = require('../lib/config');
 const { precalentarBackend, obtenerContexto, obtenerCatalogoCompleto, fetchPier } = require('../lib/api');
 const { obtenerUsuarioAuth } = require('../lib/auth');
 const { estaAbiertoAhora, describirHorario } = require('../lib/horario');
+const { normalizar } = require('../lib/texto');
 const { responderConIA } = require('../lib/ia');
 const { responder } = require('../lib/respuesta');
 const {
@@ -202,13 +203,26 @@ const ConsultarDestacadosIntentHandler = {
 const CotizarEnvioIntentHandler = {
   canHandle(h) { return esIntent(h, 'CotizarEnvioIntent'); },
   async handle(h) {
-    const colonia = (Alexa.getSlotValue(h.requestEnvelope, 'colonia') || '')
+    let colonia = (Alexa.getSlotValue(h.requestEnvelope, 'colonia') || '')
       .replace(/\b(la |el )?colonia\b/gi, '').trim();
     if (!colonia) {
       return responder(h, '¿A qué colonia o comunidad quieres que cotice el envío?');
     }
     try {
-      const data = await fetchPier(`/api/zonas-envio/cotizar?colonia=${encodeURIComponent(colonia)}`, 4000);
+      let data = await fetchPier(`/api/zonas-envio/cotizar?colonia=${encodeURIComponent(colonia)}`, 4000);
+      // El backend compara sin mayúsculas pero CON acentos, y Alexa a veces
+      // transcribe sin ellos ("adolfo lopez mateos"). Si no hubo cobertura,
+      // buscamos la colonia en la lista oficial ignorando acentos.
+      if (!data.cobertura) {
+        const lista = await fetchPier('/api/zonas-envio/colonias', 4000).catch(() => null);
+        const dicha = normalizar(colonia);
+        const oficial = (lista?.colonias || []).find(c => normalizar(c.colonia) === dicha)
+          || (lista?.colonias || []).find(c => normalizar(c.colonia).includes(dicha) || dicha.includes(normalizar(c.colonia)));
+        if (oficial) {
+          data = { cobertura: true, tarifa: oficial.tarifa, zona: oficial.zona };
+          colonia = oficial.colonia;
+        }
+      }
       if (data.cobertura) {
         return responder(
           h,
