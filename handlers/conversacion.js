@@ -77,7 +77,9 @@ const HelpIntentHandler = {
   handle(h) {
     const attrs = h.attributesManager.getSessionAttributes();
     let speak;
-    if (attrs.confirmandoVaciar) {
+    if (attrs.confirmandoPedido) {
+      speak = 'Te pregunté si confirmo tu pedido para recoger en tienda. Dime sí para confirmarlo o no para dejarlo pendiente.';
+    } else if (attrs.confirmandoVaciar) {
       speak = 'Te pregunté si vacío tu carrito. Dime sí para vaciarlo, o no para dejarlo como está.';
     } else if (attrs.pendingCarrito) {
       speak = `Estamos eligiendo el tamaño del ${attrs.pendingCarrito.producto_nombre}: dime chico o grande, o di no para cancelar.`;

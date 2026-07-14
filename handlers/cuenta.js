@@ -5,8 +5,9 @@
 const Alexa = require('ask-sdk-core');
 const fetch = require('node-fetch');
 const { obtenerConfig } = require('../lib/config');
-const { fetchPierAuth } = require('../lib/api');
+const { fetchPierAuth, obtenerCatalogoCompleto } = require('../lib/api');
 const { obtenerToken, limpiarVinculacion } = require('../lib/auth');
+const { normalizar } = require('../lib/texto');
 const { responderConIA } = require('../lib/ia');
 const { responder, responderVincular } = require('../lib/respuesta');
 const { buildHeadline, buildImageList } = require('../lib/apl');
@@ -360,10 +361,233 @@ const MisResenasIntentHandler = {
   },
 };
 
+// =====================================================================
+// FAVORITOS POR VOZ: agregar y quitar
+// =====================================================================
+function buscarProductoPorNombre(dicho, catalogo) {
+  const t = normalizar(dicho).replace(/\b(el|la|los|las|un|una|mi|mis)\b/g, ' ');
+  const matches = (catalogo || []).filter(p =>
+    p.nombre && (t.includes(normalizar(p.nombre)) || normalizar(p.nombre).includes(t.trim()))
+  );
+  if (matches.length === 0) return null;
+  return matches.sort((a, b) => b.nombre.length - a.nombre.length)[0];
+}
+
+const AgregarFavoritoIntentHandler = {
+  canHandle(h) { return esIntent(h, 'AgregarFavoritoIntent'); },
+  async handle(h) {
+    const token = obtenerToken(h);
+    if (!token) {
+      return responderVincular(h, 'Para guardar favoritos primero vincula tu cuenta: genera un código en tu perfil de la web de Pier y dime, vincula mi cuenta con el código.');
+    }
+    const dicho = Alexa.getSlotValue(h.requestEnvelope, 'producto') || '';
+    try {
+      const catalogo = await obtenerCatalogoCompleto();
+      const attrs = h.attributesManager.getSessionAttributes();
+      const producto = buscarProductoPorNombre(dicho, catalogo)
+        || (attrs.productoActivo && catalogo.find(p => p.id === attrs.productoActivo.id));
+      if (!producto) {
+        return responder(h, `No encontré "${dicho}" en nuestro catálogo. ¿Cuál producto quieres guardar en favoritos?`);
+      }
+      const data = await fetchPierAuth(`/api/favoritos/${producto.id}`, token, { method: 'POST' });
+      const yaEstaba = /ya está/i.test(data.message || '');
+      return responder(
+        h,
+        yaEstaba
+          ? `El ${producto.nombre} ya estaba en tus favoritos. ¡Buen gusto!`
+          : `Listo, guardé el ${producto.nombre} en tus favoritos. Así lo encuentras rapidito la próxima vez.`,
+        buildHeadline({
+          subtituloHeader: 'Favoritos',
+          primario: producto.nombre,
+          secundario: yaEstaba ? 'Ya estaba en tus favoritos' : 'Agregado a tus favoritos ♥',
+          hint: 'Di "mis favoritos" para escucharlos',
+        }),
+        'favoritoToken'
+      );
+    } catch (e) {
+      if (String(e.message) === 'token_invalido') return sesionExpirada(h);
+      console.error('AgregarFavorito error:', e);
+      return responder(h, 'No pude guardar el favorito en este momento.');
+    }
+  },
+};
+
+const QuitarFavoritoIntentHandler = {
+  canHandle(h) { return esIntent(h, 'QuitarFavoritoIntent'); },
+  async handle(h) {
+    const token = obtenerToken(h);
+    if (!token) {
+      return responderVincular(h, 'Para modificar tus favoritos primero vincula tu cuenta: genera un código en tu perfil de la web de Pier y dime, vincula mi cuenta con el código.');
+    }
+    const dicho = Alexa.getSlotValue(h.requestEnvelope, 'producto') || '';
+    try {
+      const data = await fetchPierAuth('/api/favoritos', token);
+      const favoritos = data.favoritos || [];
+      if (favoritos.length === 0) {
+        return responder(h, 'No tienes favoritos guardados todavía.');
+      }
+      const producto = buscarProductoPorNombre(dicho, favoritos);
+      if (!producto) {
+        const nombres = favoritos.slice(0, 4).map(f => f.nombre).join(', ');
+        return responder(h, `Ese no está en tus favoritos. Tienes: ${nombres}. ¿Cuál quito?`);
+      }
+      await fetchPierAuth(`/api/favoritos/${producto.id}`, token, { method: 'DELETE' });
+      return responder(
+        h,
+        `Listo, quité el ${producto.nombre} de tus favoritos. ¿Algo más?`,
+        buildHeadline({
+          subtituloHeader: 'Favoritos',
+          primario: producto.nombre,
+          secundario: 'Quitado de tus favoritos',
+        }),
+        'favoritoToken'
+      );
+    } catch (e) {
+      if (String(e.message) === 'token_invalido') return sesionExpirada(h);
+      console.error('QuitarFavorito error:', e);
+      return responder(h, 'No pude modificar tus favoritos en este momento.');
+    }
+  },
+};
+
+// =====================================================================
+// NOTIFICACIONES: lee las no leídas y las marca como leídas
+// =====================================================================
+const NotificacionesIntentHandler = {
+  canHandle(h) { return esIntent(h, 'NotificacionesIntent'); },
+  async handle(h) {
+    const token = obtenerToken(h);
+    if (!token) {
+      return responderVincular(h, 'Para ver tus notificaciones primero vincula tu cuenta: genera un código en tu perfil de la web de Pier y dime, vincula mi cuenta con el código.');
+    }
+    try {
+      const data = await fetchPierAuth('/api/notificaciones', token);
+      const noLeidas = (data.notificaciones || []).filter(n => !n.leida);
+      if (noLeidas.length === 0) {
+        return responder(h, 'Estás al día, no tienes notificaciones nuevas. ¿Te ayudo con otra cosa?');
+      }
+      const top = noLeidas.slice(0, 3);
+      const habla = top.map(n => `${n.titulo}: ${n.mensaje}`).join('. ');
+      const extra = noLeidas.length > 3 ? ` Y tienes ${noLeidas.length - 3} más en la web.` : '';
+      // Ya leídas por voz: se marcan como leídas para no repetirlas
+      fetchPierAuth('/api/notificaciones/leer-todas', token, { method: 'PUT' }).catch(() => { });
+      const items = top.map(n => ({
+        primario: n.titulo || 'Notificación',
+        secundario: n.mensaje || '',
+        terciario: n.created_at ? new Date(n.created_at).toLocaleDateString('es-MX') : '',
+      }));
+      return responder(
+        h,
+        `Tienes ${noLeidas.length} ${noLeidas.length === 1 ? 'notificación nueva' : 'notificaciones nuevas'}. ${habla}.${extra}`,
+        buildImageList('Tus notificaciones', items, 'Ya quedaron marcadas como leídas'),
+        'notificacionesToken'
+      );
+    } catch (e) {
+      if (String(e.message) === 'token_invalido') return sesionExpirada(h);
+      console.error('Notificaciones error:', e);
+      return responder(h, 'No pude consultar tus notificaciones en este momento.');
+    }
+  },
+};
+
+// =====================================================================
+// PEDIDOS DEL NEGOCIO (solo empleado/gerencia/dirección)
+// «cuántos pedidos pendientes hay» / «cómo van los pedidos»
+// =====================================================================
+const ESTADOS_VOZ = {
+  'pendientes': 'pendiente',
+  'en preparación': 'en_preparacion',
+  'listos': 'listo',
+  'completados': 'completado',
+  'cancelados': 'cancelado',
+};
+
+function estadoLegible(e) {
+  return String(e || '').replace(/_/g, ' ');
+}
+
+const PedidosNegocioIntentHandler = {
+  canHandle(h) { return esIntent(h, 'PedidosNegocioIntent'); },
+  async handle(h) {
+    const token = obtenerToken(h);
+    const attrs = h.attributesManager.getSessionAttributes();
+    const rol = attrs.usuarioAutenticado?.rol;
+    if (!token) {
+      return responderVincular(h, 'Esa consulta es del personal de Pier. Vincula tu cuenta de empleado con el código de tu panel, o identifícate con tu código y pin.');
+    }
+    if (rol && !['empleado', 'gerencia', 'direccion_general'].includes(rol)) {
+      return responder(h, 'Esa consulta es solo para el personal de Pier. ¿Te ayudo con el catálogo o con tu pedido?');
+    }
+    // Resolver el estado dicho (con sinónimos del slot) a su valor en BD
+    const slot = h.requestEnvelope.request.intent?.slots?.estado;
+    const resuelto = slot?.resolutions?.resolutionsPerAuthority?.[0]?.values?.[0]?.value?.name
+      || slot?.value || '';
+    const estadoBD = ESTADOS_VOZ[normalizar(resuelto)] || ESTADOS_VOZ[resuelto] || null;
+
+    try {
+      const query = estadoBD ? `/api/pedidos?estado=${encodeURIComponent(estadoBD)}&limite=100` : '/api/pedidos?limite=100';
+      const data = await fetchPierAuth(query, token);
+      const pedidos = data.pedidos || [];
+
+      if (estadoBD) {
+        if (pedidos.length === 0) {
+          return responder(h, `No hay pedidos ${estadoLegible(estadoBD)} en este momento. Todo al día.`);
+        }
+        const top = pedidos.slice(0, 3).map(p =>
+          `${p.numero}, de ${p.cliente_nombre || 'cliente'}, ${Number(p.total || 0).toFixed(0)} pesos`
+        ).join('; ');
+        const items = pedidos.slice(0, 6).map(p => ({
+          primario: p.numero || `#${p.id}`,
+          secundario: `${p.cliente_nombre || ''} ${p.cliente_apellido || ''}`.trim() || 'Cliente',
+          terciario: '$' + Number(p.total || 0).toFixed(0),
+        }));
+        return responder(
+          h,
+          `Hay ${pedidos.length} ${pedidos.length === 1 ? 'pedido' : 'pedidos'} ${estadoLegible(estadoBD)}${pedidos.length === 1 ? '' : 's'}. ${pedidos.length <= 3 ? top : `Los más recientes: ${top}`}. El detalle completo está en tu panel.`,
+          buildImageList(`Pedidos: ${estadoLegible(estadoBD)}`, items, 'Gestiona los pedidos desde tu panel web'),
+          'pedidosNegocioToken'
+        );
+      }
+
+      // Sin estado: resumen general por estados (calculado aquí, como lo hace la web)
+      const conteo = {};
+      pedidos.forEach(p => { conteo[p.estado] = (conteo[p.estado] || 0) + 1; });
+      const partes = ['pendiente', 'en_preparacion', 'listo', 'completado']
+        .filter(e => conteo[e])
+        .map(e => `${conteo[e]} ${estadoLegible(e)}`);
+      if (partes.length === 0) {
+        return responder(h, 'No hay pedidos registrados por ahora. Todo tranquilo.');
+      }
+      const items = Object.entries(conteo).map(([e, n]) => ({
+        primario: estadoLegible(e),
+        secundario: `${n} ${n === 1 ? 'pedido' : 'pedidos'}`,
+        terciario: '',
+      }));
+      return responder(
+        h,
+        `Así van los pedidos: ${partes.join(', ')}. ¿Quieres el detalle de algún estado?`,
+        buildImageList('Pedidos del negocio', items, 'Di, por ejemplo: "qué pedidos están pendientes"'),
+        'pedidosNegocioToken'
+      );
+    } catch (e) {
+      if (String(e.message) === 'token_invalido') return sesionExpirada(h);
+      if (/403/.test(String(e.message))) {
+        return responder(h, 'Esa consulta es solo para el personal de Pier. ¿Te ayudo con el catálogo o con tu pedido?');
+      }
+      console.error('PedidosNegocio error:', e);
+      return responder(h, 'No pude consultar los pedidos del negocio en este momento.');
+    }
+  },
+};
+
 module.exports = {
   VincularCuentaIntentHandler,
   LoginEmpleadoIntentHandler,
   LogoutEmpleadoIntentHandler,
+  AgregarFavoritoIntentHandler,
+  QuitarFavoritoIntentHandler,
+  NotificacionesIntentHandler,
+  PedidosNegocioIntentHandler,
   MisPedidosIntentHandler,
   EstadoUltimoPedidoIntentHandler,
   MisFavoritosIntentHandler,

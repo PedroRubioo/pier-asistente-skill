@@ -11,7 +11,7 @@ const { obtenerCatalogoCompleto, productosEnCache } = require('../lib/api');
 const { responderConIA } = require('../lib/ia');
 const { responder } = require('../lib/respuesta');
 const { buildImageList, buildMultipleChoice } = require('../lib/apl');
-const { iniciarAgregadoProducto, ejecutarVaciado } = require('./carrito');
+const { iniciarAgregadoProducto, ejecutarVaciado, ejecutarCrearPedido } = require('./carrito');
 
 const TAM_PAGINA = 5;
 
@@ -111,6 +111,13 @@ const YesIntentHandler = {
   async handle(h) {
     const attrs = h.attributesManager.getSessionAttributes();
 
+    // 0) Confirmación pendiente de CREAR PEDIDO (checkout por voz)
+    if (attrs.confirmandoPedido) {
+      delete attrs.confirmandoPedido;
+      h.attributesManager.setSessionAttributes(attrs);
+      return ejecutarCrearPedido(h);
+    }
+
     // 1) Confirmación pendiente de vaciar carrito
     if (attrs.confirmandoVaciar) {
       delete attrs.confirmandoVaciar;
@@ -158,6 +165,12 @@ const NoIntentHandler = {
   canHandle(h) { return esIntent(h, 'AMAZON.NoIntent'); },
   async handle(h) {
     const attrs = h.attributesManager.getSessionAttributes();
+
+    if (attrs.confirmandoPedido) {
+      delete attrs.confirmandoPedido;
+      h.attributesManager.setSessionAttributes(attrs);
+      return responder(h, 'Va, no confirmo nada. Tu carrito se queda tal cual por si te animas después. ¿Algo más?');
+    }
 
     if (attrs.confirmandoVaciar) {
       delete attrs.confirmandoVaciar;

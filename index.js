@@ -67,6 +67,11 @@ const LimpiarEstadoObsoletoInterceptor = {
       delete attrs.confirmandoVaciar;
     }
 
+    const mantienenPedido = ['AMAZON.YesIntent', 'AMAZON.NoIntent', 'AMAZON.HelpIntent', 'ConfirmarPedidoIntent'];
+    if (attrs.confirmandoPedido && !mantienenPedido.includes(nombre)) {
+      delete attrs.confirmandoPedido;
+    }
+
     const mantienenPaginacion = [
       'AMAZON.YesIntent', 'AMAZON.NoIntent', 'AMAZON.NextIntent', 'ResumirIntent',
       'AMAZON.HelpIntent', 'AMAZON.StopIntent', 'AMAZON.CancelIntent',
@@ -101,8 +106,15 @@ exports.handler = Alexa.SkillBuilders.custom()
     cuenta.EstadoUltimoPedidoIntentHandler,
     cuenta.MisFavoritosIntentHandler,
     cuenta.MiPerfilIntentHandler,
-    // Acciones autenticadas (carrito, reseñas)
+    cuenta.AgregarFavoritoIntentHandler,
+    cuenta.QuitarFavoritoIntentHandler,
+    cuenta.NotificacionesIntentHandler,
+    cuenta.PedidosNegocioIntentHandler,
+    // Acciones autenticadas (carrito, pedido por voz, reseñas)
     carrito.AgregarCarritoIntentHandler,
+    carrito.QuitarCarritoIntentHandler,
+    carrito.ConfirmarPedidoIntentHandler,
+    carrito.PedirDeNuevoIntentHandler,
     carrito.TamanoChicoIntentHandler,
     carrito.TamanoGrandeIntentHandler,
     carrito.ConsultarCarritoIntentHandler,
@@ -115,6 +127,7 @@ exports.handler = Alexa.SkillBuilders.custom()
     publicos.ConsultarHorarioIntentHandler,
     publicos.ConsultarUbicacionIntentHandler,
     publicos.ConsultarDestacadosIntentHandler,
+    publicos.CotizarEnvioIntentHandler,
     // Conversación abierta + sistema
     conversacion.PreguntaPierIntentHandler,
     conversacion.HelpIntentHandler,

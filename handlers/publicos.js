@@ -4,7 +4,7 @@
 // =====================================================================
 const Alexa = require('ask-sdk-core');
 const { PIER_WEB, PIER_DIRECCION, PIER_TELEFONO } = require('../lib/config');
-const { precalentarBackend, obtenerContexto, obtenerCatalogoCompleto } = require('../lib/api');
+const { precalentarBackend, obtenerContexto, obtenerCatalogoCompleto, fetchPier } = require('../lib/api');
 const { obtenerUsuarioAuth } = require('../lib/auth');
 const { estaAbiertoAhora, describirHorario } = require('../lib/horario');
 const { responderConIA } = require('../lib/ia');
@@ -195,8 +195,54 @@ const ConsultarDestacadosIntentHandler = {
   },
 };
 
+// =====================================================================
+// COTIZAR ENVÍO A DOMICILIO POR COLONIA (público)
+// «¿hacen envíos a la colonia Aviación?»
+// =====================================================================
+const CotizarEnvioIntentHandler = {
+  canHandle(h) { return esIntent(h, 'CotizarEnvioIntent'); },
+  async handle(h) {
+    const colonia = (Alexa.getSlotValue(h.requestEnvelope, 'colonia') || '')
+      .replace(/\b(la |el )?colonia\b/gi, '').trim();
+    if (!colonia) {
+      return responder(h, '¿A qué colonia o comunidad quieres que cotice el envío?');
+    }
+    try {
+      const data = await fetchPier(`/api/zonas-envio/cotizar?colonia=${encodeURIComponent(colonia)}`, 4000);
+      if (data.cobertura) {
+        return responder(
+          h,
+          `¡Sí llegamos! El envío a ${colonia} cuesta ${Number(data.tarifa).toFixed(0)} pesos, zona ${data.zona}. Haz tu pedido a domicilio desde la web, o si prefieres, pídelo conmigo y lo recoges en tienda.`,
+          buildHeadline({
+            subtituloHeader: 'Envío a domicilio',
+            primario: colonia,
+            secundario: `Envío $${Number(data.tarifa).toFixed(0)} MXN · Zona ${data.zona}`,
+            hint: 'Pedidos a domicilio en la web',
+          }),
+          'envioToken'
+        );
+      }
+      return responder(
+        h,
+        `Por ahora no tenemos cobertura de envío en ${colonia}, pero puedes hacer tu pedido conmigo y recogerlo en tienda. ¿Te late?`,
+        buildHeadline({
+          subtituloHeader: 'Envío a domicilio',
+          primario: colonia,
+          secundario: 'Sin cobertura por ahora · Recoge en tienda',
+          hint: 'Di "confirma mi pedido" para pedir y recoger',
+        }),
+        'envioToken'
+      );
+    } catch (e) {
+      console.error('CotizarEnvio error:', e);
+      return responder(h, 'No pude cotizar el envío en este momento. Intenta de nuevo en un ratito.');
+    }
+  },
+};
+
 module.exports = {
   LaunchRequestHandler,
+  CotizarEnvioIntentHandler,
   ConsultarCatalogoIntentHandler,
   ConsultarCategoriasIntentHandler,
   ConsultarPromocionesIntentHandler,

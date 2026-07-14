@@ -282,6 +282,157 @@
         },
 
         {
+          "name": "ConfirmarPedidoIntent",
+          "slots": [],
+          "samples": [
+            "confirma mi pedido",
+            "confirmar mi pedido",
+            "confirmar pedido",
+            "haz mi pedido",
+            "haz el pedido",
+            "hacer el pedido",
+            "realiza mi pedido",
+            "finaliza mi pedido",
+            "finalizar pedido",
+            "cierra mi pedido",
+            "termina mi compra",
+            "quiero hacer el pedido",
+            "quiero confirmar mi pedido",
+            "ordena mi pedido",
+            "manda mi pedido"
+          ]
+        },
+
+        {
+          "name": "QuitarCarritoIntent",
+          "slots": [
+            { "name": "producto", "type": "AMAZON.SearchQuery" }
+          ],
+          "samples": [
+            "quita {producto} del carrito",
+            "quítame {producto} del carrito",
+            "elimina {producto} del carrito",
+            "elimíname {producto} del carrito",
+            "saca {producto} del carrito",
+            "sácame {producto} del carrito",
+            "borra {producto} del carrito",
+            "remueve {producto} del carrito",
+            "ya no quiero {producto}",
+            "quita {producto} de mi carrito",
+            "elimina {producto} de mi carrito"
+          ]
+        },
+
+        {
+          "name": "PedirDeNuevoIntent",
+          "slots": [],
+          "samples": [
+            "pide lo de siempre",
+            "lo de siempre",
+            "pide lo mismo de la última vez",
+            "lo mismo de la vez pasada",
+            "qué he comprado antes",
+            "qué compré la última vez",
+            "mis compras anteriores",
+            "qué he pedido antes",
+            "lo que siempre pido"
+          ]
+        },
+
+        {
+          "name": "AgregarFavoritoIntent",
+          "slots": [
+            { "name": "producto", "type": "AMAZON.SearchQuery" }
+          ],
+          "samples": [
+            "agrega {producto} a favoritos",
+            "agrega {producto} a mis favoritos",
+            "agrégame {producto} a favoritos",
+            "guarda {producto} en favoritos",
+            "guarda {producto} en mis favoritos",
+            "pon {producto} en favoritos",
+            "pon {producto} en mis favoritos",
+            "marca {producto} como favorito",
+            "quiero {producto} en mis favoritos"
+          ]
+        },
+
+        {
+          "name": "QuitarFavoritoIntent",
+          "slots": [
+            { "name": "producto", "type": "AMAZON.SearchQuery" }
+          ],
+          "samples": [
+            "quita {producto} de favoritos",
+            "quita {producto} de mis favoritos",
+            "quítame {producto} de favoritos",
+            "elimina {producto} de favoritos",
+            "elimina {producto} de mis favoritos",
+            "saca {producto} de mis favoritos",
+            "borra {producto} de favoritos",
+            "ya no quiero {producto} en favoritos"
+          ]
+        },
+
+        {
+          "name": "CotizarEnvioIntent",
+          "slots": [
+            { "name": "colonia", "type": "AMAZON.SearchQuery" }
+          ],
+          "samples": [
+            "cuánto cuesta el envío a {colonia}",
+            "cuánto cuesta el envío a la colonia {colonia}",
+            "cuánto cobran el envío a {colonia}",
+            "cuánto sale el envío a {colonia}",
+            "hacen envíos a {colonia}",
+            "envían a {colonia}",
+            "llegan a {colonia}",
+            "hay cobertura en {colonia}",
+            "tienen cobertura en {colonia}",
+            "cuál es la tarifa de envío a {colonia}",
+            "hacen entregas en {colonia}"
+          ]
+        },
+
+        {
+          "name": "NotificacionesIntent",
+          "slots": [],
+          "samples": [
+            "qué notificaciones tengo",
+            "tengo notificaciones",
+            "mis notificaciones",
+            "tengo notificaciones nuevas",
+            "hay algo nuevo para mí",
+            "qué hay de nuevo en mi cuenta",
+            "novedades de mi cuenta",
+            "léeme mis notificaciones",
+            "tengo avisos"
+          ]
+        },
+
+        {
+          "name": "PedidosNegocioIntent",
+          "slots": [
+            { "name": "estado", "type": "TIPO_ESTADO_PEDIDO" }
+          ],
+          "samples": [
+            "cuántos pedidos {estado} hay",
+            "cuántos pedidos hay {estado}",
+            "qué pedidos están {estado}",
+            "pedidos {estado}",
+            "hay pedidos {estado}",
+            "dame los pedidos {estado}",
+            "cuántos pedidos hay",
+            "cómo van los pedidos",
+            "cómo va el negocio",
+            "qué pedidos tenemos",
+            "resumen de pedidos",
+            "pedidos del negocio",
+            "cómo vamos hoy"
+          ]
+        },
+
+        {
           "name": "ConsultarCarritoIntent",
           "slots": [],
           "samples": [
@@ -920,7 +1071,18 @@
           ]
         }
       ],
-      "types": []
+      "types": [
+        {
+          "name": "TIPO_ESTADO_PEDIDO",
+          "values": [
+            { "name": { "value": "pendientes", "synonyms": ["pendiente", "sin atender", "nuevos"] } },
+            { "name": { "value": "en preparación", "synonyms": ["en preparacion", "preparándose", "en la cocina", "preparación"] } },
+            { "name": { "value": "listos", "synonyms": ["listo", "listos para recoger", "terminados"] } },
+            { "name": { "value": "completados", "synonyms": ["completado", "entregados", "finalizados"] } },
+            { "name": { "value": "cancelados", "synonyms": ["cancelado"] } }
+          ]
+        }
+      ]
     }
   }
 }
