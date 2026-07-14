@@ -20,6 +20,7 @@ const cuenta = require('./handlers/cuenta');
 const carrito = require('./handlers/carrito');
 const conversacion = require('./handlers/conversacion');
 const dialogo = require('./handlers/dialogo');
+const negocio = require('./handlers/negocio');
 const { AplUserEventHandler } = require('./handlers/aplEventos');
 
 // Al inicio de cada sesión carga la vinculación persistida (código de
@@ -72,6 +73,18 @@ const LimpiarEstadoObsoletoInterceptor = {
       delete attrs.confirmandoPedido;
     }
 
+    // Confirmaciones del personal: mismas reglas (solo sí/no/ayuda las mantienen)
+    const soloSiNo = ['AMAZON.YesIntent', 'AMAZON.NoIntent', 'AMAZON.HelpIntent'];
+    if (attrs.confirmandoEstadoPedido && !soloSiNo.includes(nombre) && nombre !== 'CambiarEstadoPedidoIntent') {
+      delete attrs.confirmandoEstadoPedido;
+    }
+    if (attrs.confirmandoAsignacion && !soloSiNo.includes(nombre) && nombre !== 'AsignarRepartidorIntent') {
+      delete attrs.confirmandoAsignacion;
+    }
+    if (attrs.confirmandoAgotado && !soloSiNo.includes(nombre) && nombre !== 'MarcarAgotadoIntent') {
+      delete attrs.confirmandoAgotado;
+    }
+
     const mantienenPaginacion = [
       'AMAZON.YesIntent', 'AMAZON.NoIntent', 'AMAZON.NextIntent', 'ResumirIntent',
       'AMAZON.HelpIntent', 'AMAZON.StopIntent', 'AMAZON.CancelIntent',
@@ -110,6 +123,17 @@ exports.handler = Alexa.SkillBuilders.custom()
     cuenta.QuitarFavoritoIntentHandler,
     cuenta.NotificacionesIntentHandler,
     cuenta.PedidosNegocioIntentHandler,
+    // Operaciones del negocio (empleado/gerencia/dirección)
+    negocio.CambiarEstadoPedidoIntentHandler,
+    negocio.DetallePedidoIntentHandler,
+    negocio.AvisarDemoraIntentHandler,
+    negocio.EntregasIntentHandler,
+    negocio.RepartidoresIntentHandler,
+    negocio.AsignarRepartidorIntentHandler,
+    negocio.ConsultarStockIntentHandler,
+    negocio.ReponerStockIntentHandler,
+    negocio.MarcarAgotadoIntentHandler,
+    negocio.VentasHoyIntentHandler,
     // Acciones autenticadas (carrito, pedido por voz, reseñas)
     carrito.AgregarCarritoIntentHandler,
     carrito.QuitarCarritoIntentHandler,

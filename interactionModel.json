@@ -433,6 +433,163 @@
         },
 
         {
+          "name": "CambiarEstadoPedidoIntent",
+          "slots": [
+            { "name": "numero", "type": "AMAZON.NUMBER" },
+            { "name": "nuevoEstado", "type": "TIPO_ESTADO_PEDIDO" }
+          ],
+          "samples": [
+            "marca el pedido {numero} como {nuevoEstado}",
+            "marca el pedido {numero} {nuevoEstado}",
+            "pon el pedido {numero} en {nuevoEstado}",
+            "pon el pedido {numero} como {nuevoEstado}",
+            "cambia el pedido {numero} a {nuevoEstado}",
+            "el pedido {numero} está {nuevoEstado}",
+            "el pedido {numero} ya está {nuevoEstado}",
+            "pasa el pedido {numero} a {nuevoEstado}",
+            "actualiza el pedido {numero} a {nuevoEstado}",
+            "cancela el pedido {numero}"
+          ]
+        },
+
+        {
+          "name": "DetallePedidoIntent",
+          "slots": [
+            { "name": "numero", "type": "AMAZON.NUMBER" }
+          ],
+          "samples": [
+            "qué lleva el pedido {numero}",
+            "qué tiene el pedido {numero}",
+            "detalle del pedido {numero}",
+            "dame el detalle del pedido {numero}",
+            "de qué es el pedido {numero}",
+            "qué pidió el pedido {numero}",
+            "información del pedido {numero}",
+            "revisa el pedido {numero}"
+          ]
+        },
+
+        {
+          "name": "AvisarDemoraIntent",
+          "slots": [
+            { "name": "numero", "type": "AMAZON.NUMBER" }
+          ],
+          "samples": [
+            "avisa demora del pedido {numero}",
+            "avisa la demora del pedido {numero}",
+            "notifica demora del pedido {numero}",
+            "avísale al cliente del pedido {numero} que hay demora",
+            "el pedido {numero} va retrasado",
+            "manda aviso de demora del pedido {numero}"
+          ]
+        },
+
+        {
+          "name": "EntregasIntent",
+          "slots": [
+            { "name": "estadoEntrega", "type": "TIPO_ESTADO_ENTREGA" }
+          ],
+          "samples": [
+            "qué entregas están {estadoEntrega}",
+            "qué entregas hay {estadoEntrega}",
+            "entregas {estadoEntrega}",
+            "cómo van las entregas",
+            "qué entregas hay",
+            "tablero de entregas",
+            "cómo van los envíos"
+          ]
+        },
+
+        {
+          "name": "RepartidoresIntent",
+          "slots": [],
+          "samples": [
+            "qué repartidores están disponibles",
+            "qué repartidores hay",
+            "hay repartidores disponibles",
+            "quién puede repartir",
+            "repartidores disponibles",
+            "quién está libre para entregar"
+          ]
+        },
+
+        {
+          "name": "AsignarRepartidorIntent",
+          "slots": [
+            { "name": "numero", "type": "AMAZON.NUMBER" },
+            { "name": "repartidor", "type": "AMAZON.FirstName" }
+          ],
+          "samples": [
+            "asigna el pedido {numero} a {repartidor}",
+            "asígnale el pedido {numero} a {repartidor}",
+            "dale el pedido {numero} a {repartidor}",
+            "que {repartidor} lleve el pedido {numero}",
+            "manda el pedido {numero} con {repartidor}",
+            "asigna a {repartidor} el pedido {numero}"
+          ]
+        },
+
+        {
+          "name": "ConsultarStockIntent",
+          "slots": [],
+          "samples": [
+            "qué productos están agotados",
+            "qué está agotado",
+            "hay productos agotados",
+            "qué anda bajo de stock",
+            "qué productos tienen poco stock",
+            "cómo está el inventario",
+            "cómo está el stock",
+            "qué falta reponer",
+            "alertas de inventario"
+          ]
+        },
+
+        {
+          "name": "ReponerStockIntent",
+          "slots": [
+            { "name": "cantidad", "type": "AMAZON.NUMBER" },
+            { "name": "producto", "type": "AMAZON.SearchQuery" }
+          ],
+          "samples": [
+            "repón {cantidad} unidades de {producto}",
+            "repón {cantidad} de {producto}",
+            "agrega {cantidad} unidades de stock de {producto}",
+            "suma {cantidad} unidades de {producto} al inventario",
+            "mete {cantidad} unidades de {producto} al stock"
+          ]
+        },
+
+        {
+          "name": "MarcarAgotadoIntent",
+          "slots": [
+            { "name": "producto", "type": "AMAZON.SearchQuery" }
+          ],
+          "samples": [
+            "marca {producto} como agotado",
+            "marca como agotado {producto}",
+            "pon {producto} como agotado",
+            "ya no hay {producto}",
+            "se acabó {producto}",
+            "agota {producto} en línea"
+          ]
+        },
+
+        {
+          "name": "VentasHoyIntent",
+          "slots": [],
+          "samples": [
+            "cómo van las ventas hoy",
+            "cuánto hemos vendido hoy",
+            "cuánto llevamos vendido",
+            "ventas del día",
+            "cómo van las ventas",
+            "resumen del día",
+            "cuántos pedidos han entrado hoy"
+          ]
+        },
+
+        {
           "name": "ConsultarCarritoIntent",
           "slots": [],
           "samples": [
@@ -1072,6 +1229,13 @@
         }
       ],
       "types": [
+        {
+          "name": "TIPO_ESTADO_ENTREGA",
+          "values": [
+            { "name": { "value": "asignadas", "synonyms": ["asignada", "por salir", "asignados"] } },
+            { "name": { "value": "en camino", "synonyms": ["en ruta", "saliendo", "en reparto"] } }
+          ]
+        },
         {
           "name": "TIPO_ESTADO_PEDIDO",
           "values": [

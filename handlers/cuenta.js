@@ -593,4 +593,6 @@ module.exports = {
   MisFavoritosIntentHandler,
   MiPerfilIntentHandler,
   MisResenasIntentHandler,
+  ESTADOS_VOZ,
+  estadoLegible,
 };

@@ -12,6 +12,7 @@ const { responderConIA } = require('../lib/ia');
 const { responder } = require('../lib/respuesta');
 const { buildImageList, buildMultipleChoice } = require('../lib/apl');
 const { iniciarAgregadoProducto, ejecutarVaciado, ejecutarCrearPedido } = require('./carrito');
+const { ejecutarCambioEstado, ejecutarAsignacion, ejecutarMarcarAgotado } = require('./negocio');
 
 const TAM_PAGINA = 5;
 
@@ -118,6 +119,11 @@ const YesIntentHandler = {
       return ejecutarCrearPedido(h);
     }
 
+    // 0.1) Confirmaciones del personal: estado de pedido, asignación, agotado
+    if (attrs.confirmandoEstadoPedido) return ejecutarCambioEstado(h);
+    if (attrs.confirmandoAsignacion) return ejecutarAsignacion(h);
+    if (attrs.confirmandoAgotado) return ejecutarMarcarAgotado(h);
+
     // 1) Confirmación pendiente de vaciar carrito
     if (attrs.confirmandoVaciar) {
       delete attrs.confirmandoVaciar;
@@ -170,6 +176,14 @@ const NoIntentHandler = {
       delete attrs.confirmandoPedido;
       h.attributesManager.setSessionAttributes(attrs);
       return responder(h, 'Va, no confirmo nada. Tu carrito se queda tal cual por si te animas después. ¿Algo más?');
+    }
+
+    if (attrs.confirmandoEstadoPedido || attrs.confirmandoAsignacion || attrs.confirmandoAgotado) {
+      delete attrs.confirmandoEstadoPedido;
+      delete attrs.confirmandoAsignacion;
+      delete attrs.confirmandoAgotado;
+      h.attributesManager.setSessionAttributes(attrs);
+      return responder(h, 'Va, no hago ningún cambio. ¿Algo más?');
     }
 
     if (attrs.confirmandoVaciar) {
