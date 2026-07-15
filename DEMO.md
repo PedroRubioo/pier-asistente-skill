@@ -1,204 +1,205 @@
-# Pier Asistente — Guion de demostración por rol
+# Pier Asistente · Guion de demostración
 
-**Skill de Alexa (es-MX) de Pier Repostería** · Invocación: *«Alexa, abre pier asistente»*
+**Skill de Alexa (español de México) para Pier Repostería** — se abre diciendo *«Alexa, abre pier asistente»*.
 
-La skill es el **escaparate por voz** de la plataforma: explora el catálogo, arma el carrito,
-consulta pedidos y opera el negocio con manos libres. La compra (pago) siempre se completa
-en la web — el carrito queda sincronizado entre voz y sitio.
+Pier Asistente es el escaparate por voz de la plataforma digital de Pier Repostería. Permite explorar el catálogo, armar el carrito de compras, dar seguimiento a los pedidos y operar el negocio con manos libres, según el rol de quien la usa. El pago y la confirmación de la compra se realizan siempre en el sitio web: el carrito que se arma por voz aparece sincronizado en la página, listo para completarse.
 
----
-
-## Cómo se inicia sesión (igual para todos los roles)
-
-1. El usuario entra a su panel en la web (perfil del cliente / dashboard del personal).
-2. Pulsa **"Vincular con Alexa"** → se genera un **código de 6 dígitos** (un solo uso, expira en 5 min).
-3. Le dice a Alexa: *«vincula mi cuenta con el código …»*.
-4. La sesión persiste 7 días entre conversaciones. *«cierra sesión»* revoca el token en el
-   backend y desvincula el dispositivo al instante.
-
-> Seguridad: código de un solo uso generado dentro de una sesión web autenticada, rate limit
-> por dispositivo (5 intentos → bloqueo 15 min), y confirmación obligatoria en toda acción
-> destructiva. También existen Account Linking OAuth y login de empleado por código + PIN
-> (bcrypt) como métodos alternos.
+Este documento describe todo lo que la skill puede hacer, organizado por rol, junto con una secuencia de demostración para cada uno. Los pasos marcados con ⭐ son los momentos clave de la evaluación.
 
 ---
 
-## 🌐 PÚBLICO — sin cuenta (exploración)
+## Inicio de sesión (idéntico para todos los roles)
 
-| Capacidad | Frase |
+1. El usuario entra a su panel en el sitio web (el cliente a su perfil; el personal a su dashboard).
+2. Pulsa el botón **“Vincular con Alexa”**. El sistema genera un **código de seis dígitos**, de un solo uso, que expira en cinco minutos.
+3. El usuario le dice a Alexa: *«vincula mi cuenta con el código …»*, y la skill lo saluda por su nombre.
+4. La sesión persiste hasta siete días entre conversaciones. Al decir *«cierra sesión»*, el token se revoca en el servidor y el dispositivo queda desvinculado de inmediato.
+
+**Medidas de seguridad del acceso:** el código nace dentro de una sesión web ya autenticada y solo puede canjearse una vez; los intentos fallidos se limitan por dispositivo (cinco intentos provocan un bloqueo de quince minutos); y toda acción destructiva exige confirmación por voz antes de ejecutarse. Como métodos alternos existen la vinculación oficial de Amazon (Account Linking con OAuth 2.0) y el acceso de empleados mediante código y PIN cifrado con bcrypt.
+
+---
+
+## 🌐 Público — exploración sin cuenta
+
+Cualquier persona puede consultar la repostería sin identificarse.
+
+| Capacidad | Frase de ejemplo |
 |---|---|
-| Catálogo completo con lectura por partes | «qué productos tienen» |
-| Continuar / resumir / detener la lectura | «sí» · «continúa» · «dame un resumen» · «basta» |
-| Categorías con tarjetas táctiles | «qué categorías manejan» |
-| Precio y ficha de cualquier producto | «cuánto cuesta el chocoflán» |
-| Recomendaciones y populares | «qué me recomiendas» |
-| Promociones activas | «qué promociones hay» |
-| Horario con estado abierto/cerrado en vivo | «a qué hora abren» |
-| Ubicación y teléfono | «dónde están» |
-| Cotización de envío por colonia | «hacen envíos a la colonia adolfo lópez mateos» |
-| Preguntas libres con IA honesta al catálogo | «qué pastel llevo a una boda» |
-| Ayuda contextual | «ayuda» |
+| Escuchar el catálogo completo, leído por partes | «qué productos tienen» |
+| Controlar la lectura: continuar, resumir o detener | «sí» · «continúa» · «dame un resumen» · «basta» |
+| Recorrer las categorías con tarjetas táctiles | «qué categorías manejan» |
+| Consultar el precio y la ficha de cualquier producto | «cuánto cuesta el chocoflán» |
+| Pedir recomendaciones y conocer lo más vendido | «qué me recomiendas» |
+| Conocer las promociones vigentes | «qué promociones hay» |
+| Preguntar el horario, con estado abierto/cerrado en tiempo real | «a qué hora abren» |
+| Obtener la ubicación y el teléfono | «dónde están» |
+| Cotizar el envío a domicilio por colonia | «hacen envíos a la colonia adolfo lópez mateos» |
+| Conversar libremente con la IA, siempre fiel al catálogo | «qué pastel me conviene para una boda» |
+| Recibir ayuda adaptada al momento de la conversación | «ayuda» |
 
-### Secuencia de demo (público)
+### Secuencia de demostración
 
-1. «abre pier asistente» → pantalla hero: **foto real de la sucursal de fondo**, logo, tipografía de marca
-2. «qué categorías manejan» → tarjetas arena → **tocar una** → productos de esa categoría
-3. **Tocar un producto** → ficha con foto, precio, descripción y botón "Agregar al pedido"
-4. «qué productos tienen» → dice el **total real** (leído de la BD) y ofrece seguir
-5. «sí» → siguiente tanda de 5 → «dame un resumen» → resumen de lo restante (conteo, categorías, rango de precios)
-6. «qué promociones hay» → promociones reales o honestidad si no hay
-7. «hacen envíos a la colonia [X]» → tarifa real de la zona; con colonia inventada → "sin cobertura" + ofrece pickup
-8. «tienen tiramisú» → *"ese no lo manejamos"* + sugiere lo más parecido **(la IA no inventa: coherente con la BD)**
-9. «a qué hora abren» → estado abierto/cerrado calculado en tiempo real
-
----
-
-## 👤 CLIENTE — vinculado
-
-Todo lo público, más:
-
-| Capacidad | Frase |
-|---|---|
-| Agregar al carrito (tamaño y cantidad) | «agrega dos chocoflanes grandes al carrito» |
-| Elegir tamaño por voz o botones táctiles A/B | «chico» / «grande» o tocar |
-| Quitar un producto del carrito | «quita el flan napolitano del carrito» |
-| Ver carrito con total real | «qué tengo en mi carrito» |
-| Vaciar carrito (con confirmación) | «vacía mi carrito» → «sí» / «no» |
-| Repetir compras anteriores | «pide lo de siempre» |
-| Sus pedidos y estado del último | «mis pedidos» · «cómo va mi último pedido» |
-| Favoritos: ver, agregar, quitar | «agrega el cheesecake oreo a mis favoritos» |
-| Notificaciones (lee y marca leídas) | «qué notificaciones tengo» |
-| Reseñas y perfil | «mis reseñas» · «quién soy» |
-| Cerrar sesión con revocación real | «cierra sesión» |
-
-### Secuencia de demo (cliente)
-
-1. En la web: Perfil → **Vincular con Alexa** → generar código
-2. «vincula mi cuenta con el código [X]» → saludo por su nombre
-3. «quién soy» → nombre, correo y rol reales
-4. «agrega dos chocoflanes grandes al carrito» → agregado directo con total ($760)
-5. «agrega un flan napolitano al carrito» → pregunta tamaño → **tocar botón A/B** o decir «chico»
-6. «quita el flan napolitano del carrito» → solo ese producto sale
-7. «pide lo de siempre» → sus compras anteriores reales → tocar una para reagregarla
-8. «qué tengo en mi carrito» → resumen hablado con total exacto
-9. «quiero hacer mi pedido» → la IA lo dirige: *"tu carrito ya te espera en la web para confirmarlo y pagarlo"*
-10. ⭐ **Abrir la web: el carrito está idéntico** — la integración skill ↔ sitio en vivo
-11. «agrega el cheesecake oreo a mis favoritos» → verificar el corazón en la web
-12. «qué notificaciones tengo» → las lee y las deja marcadas
-13. «vacía mi carrito» → *"¿seguro?"* → «no» → intacto → repetir → «sí» → vacío (confirmación de acciones destructivas)
-14. «cierra sesión» → «quién soy» → ya no reconoce al usuario (token revocado)
+| # | Qué decir o hacer | Qué debe suceder |
+|---|---|---|
+| 1 | «abre pier asistente» | Pantalla de bienvenida con la **fotografía real de la sucursal** de fondo, el logotipo y la tipografía de la marca |
+| 2 | «qué categorías manejan» | Tarjetas táctiles con las categorías reales del catálogo |
+| 3 | **Tocar una categoría** | Lista de productos de esa categoría, con fotos y precios |
+| 4 | **Tocar un producto** | Ficha del producto con imagen, precios y el botón “Agregar al pedido” |
+| 5 | «qué productos tienen» | Menciona productos reales y dice **cuántos hay en total**, ofreciendo continuar |
+| 6 | «sí» → después «dame un resumen» | Lee la siguiente tanda y luego condensa lo restante: cantidad, categorías y rango de precios |
+| 7 | «hacen envíos a la colonia [una real]» | Tarifa real de la zona; con una colonia inexistente, lo dice con honestidad y ofrece recoger en tienda |
+| 8 | ⭐ «tienen tiramisú» | *“Ese no lo manejamos”* y sugiere lo más parecido — la IA nunca inventa productos ni precios |
+| 9 | «a qué hora abren» | Responde con el estado abierto o cerrado calculado a la hora actual |
 
 ---
 
-## 👔 EMPLEADO — operación del negocio
+## 👤 Cliente — cuenta vinculada
 
-Todo lo del cliente, más:
+El cliente conserva todo lo anterior y además administra su cuenta y su carrito.
 
-| Capacidad | Frase |
+| Capacidad | Frase de ejemplo |
 |---|---|
-| Resumen de pedidos por estado | «cómo van los pedidos» |
+| Agregar productos al carrito, con tamaño y cantidad | «agrega dos chocoflanes grandes al carrito» |
+| Elegir el tamaño por voz o con botones táctiles | «chico» / «grande», o tocar la opción A/B |
+| Quitar un producto específico del carrito | «quita el flan napolitano del carrito» |
+| Escuchar el carrito con su total exacto | «qué tengo en mi carrito» |
+| Vaciar el carrito, con confirmación previa | «vacía mi carrito» → «sí» / «no» |
+| Volver a pedir lo que ha comprado antes | «pide lo de siempre» |
+| Revisar sus pedidos y el estado del más reciente | «mis pedidos» · «cómo va mi último pedido» |
+| Administrar sus favoritos | «agrega el cheesecake oreo a mis favoritos» |
+| Escuchar sus notificaciones (quedan marcadas como leídas) | «qué notificaciones tengo» |
+| Consultar sus reseñas y su perfil | «mis reseñas» · «quién soy» |
+| Cerrar sesión con revocación inmediata del acceso | «cierra sesión» |
+
+### Secuencia de demostración
+
+| # | Qué decir o hacer | Qué debe suceder |
+|---|---|---|
+| 1 | En la web: Perfil → “Vincular con Alexa” | Se genera el código de seis dígitos |
+| 2 | «vincula mi cuenta con el código [X]» | La skill saluda al cliente por su nombre |
+| 3 | «quién soy» | Nombre, correo y rol leídos de la base de datos |
+| 4 | «agrega dos chocoflanes grandes al carrito» | Los agrega y confirma el total ($760) |
+| 5 | «agrega un flan napolitano al carrito» | Pregunta el tamaño; se responde por voz o **tocando el botón A/B** |
+| 6 | «quita el flan napolitano del carrito» | Elimina únicamente ese producto |
+| 7 | «pide lo de siempre» | Recupera sus compras anteriores reales; tocar una la agrega de nuevo |
+| 8 | «qué tengo en mi carrito» | Resumen hablado con el total exacto |
+| 9 | «quiero hacer mi pedido» | La IA lo dirige con naturalidad: *“tu carrito ya te espera en la web para confirmarlo y pagarlo”* |
+| 10 | ⭐ **Abrir el sitio web** | El carrito aparece idéntico al armado por voz: la integración skill–sitio, en vivo |
+| 11 | «agrega el cheesecake oreo a mis favoritos» | Se guarda; el corazón aparece en la página |
+| 12 | «qué notificaciones tengo» | Las lee en voz alta y las deja marcadas como leídas |
+| 13 | «vacía mi carrito» → «no» → repetir → «sí» | Primero respeta la negativa; después vacía. Confirmación de acciones destructivas |
+| 14 | «cierra sesión» → «quién soy» | El acceso queda revocado: la skill ya no reconoce al usuario |
+
+---
+
+## 👔 Empleado — operación del mostrador
+
+El empleado conserva todo lo del cliente y suma la operación diaria del negocio.
+
+| Capacidad | Frase de ejemplo |
+|---|---|
+| Resumen de los pedidos por estado | «cómo van los pedidos» |
 | Pedidos filtrados por estado | «qué pedidos están pendientes» |
-| Detalle de un pedido (por últimos 4 dígitos) | «qué lleva el pedido 6651» |
-| Cambiar estado (confirma y **notifica al cliente**) | «marca el pedido 6651 como listo» |
-| Cancelar pedido (con confirmación) | «cancela el pedido 6651» |
-| Ventas del día con desglose | «cómo van las ventas hoy» |
-| Inventario: agotados y stock bajo | «qué está agotado» |
-| Reponer stock | «repón 10 unidades del chocoflán» |
-| Marcar agotado (con confirmación) | «se acabó el chocoflán» |
-| Tablero de entregas | «qué entregas están en camino» |
-| Repartidores disponibles | «qué repartidores hay» |
-| Asignar repartidor (con confirmación) | «asigna el pedido 6651 a Carlos» |
-| Avisar demora al cliente (notif + correo) | «avisa demora del pedido 6651» |
+| Detalle de un pedido, referido por sus últimos dígitos | «qué lleva el pedido 6651» |
+| Cambiar el estado de un pedido (avisa al cliente automáticamente) | «marca el pedido 6651 como listo» |
+| Cancelar un pedido, con confirmación | «cancela el pedido 6651» |
+| Ventas del día con desglose por estado | «cómo van las ventas hoy» |
+| Inventario: productos agotados y con poco stock | «qué está agotado» |
+| Reponer existencias | «repón 10 unidades del chocoflán» |
+| Marcar un producto como agotado, con confirmación | «se acabó el chocoflán» |
+| Tablero de entregas a domicilio | «qué entregas están en camino» |
+| Repartidores y su disponibilidad | «qué repartidores hay» |
+| Asignar un repartidor a un pedido, con confirmación | «asigna el pedido 6651 a Carlos» |
+| Avisar una demora al cliente (notificación y correo) | «avisa demora del pedido 6651» |
 
-### Secuencia de demo (empleado)
+### Secuencia de demostración
 
-1. En la web: Dashboard del empleado → **Vincular con Alexa** (mismo flujo que el cliente) → código
-2. «vincula mi cuenta con el código [X]» → «quién soy» → rol **empleado**
-3. «cómo van las ventas hoy» → pedidos de hoy + total $ + desglose por estado
-4. «qué pedidos están pendientes» → solo los programados en espera
-5. «qué lleva el pedido [dígitos]» → items, cliente y total
-6. «marca el pedido [dígitos] como listo» → *"¿lo cambio?"* → «sí» → ⭐ **al cliente le llega la notificación** (mostrarla en la web)
-7. «qué está agotado» → inventario real con fotos
-8. «repón 5 unidades del chocoflán» → *"pasó de 0 a 5"* → verificar en el panel
-9. «se acabó el chocoflán» → *"¿seguro? bloqueará su venta"* → «no» → nada cambia
-10. «qué repartidores están disponibles» → lista con carga activa
-11. ⭐ Prueba de jerarquía: «cuáles son los números del negocio» → *"esa información es solo de gerencia y dirección"*
+| # | Qué decir o hacer | Qué debe suceder |
+|---|---|---|
+| 1 | En la web: Dashboard del empleado → “Vincular con Alexa” | Mismo flujo de código que el cliente |
+| 2 | «vincula mi cuenta con el código [X]» → «quién soy» | Confirma el rol de **empleado** |
+| 3 | «cómo van las ventas hoy» | Pedidos del día, monto total y desglose por estado |
+| 4 | «qué pedidos están pendientes» | Solo los pedidos programados en espera |
+| 5 | «qué lleva el pedido [dígitos]» | Productos, cliente y total del pedido |
+| 6 | ⭐ «marca el pedido [dígitos] como listo» → «sí» | Cambia el estado y **el cliente recibe su notificación al instante** (mostrarla en la web) |
+| 7 | «qué está agotado» | Inventario real, con fotografías |
+| 8 | «repón 5 unidades del chocoflán» | Actualiza el stock y lo confirma: *“pasó de 0 a 5”* |
+| 9 | «se acabó el chocoflán» → «no» | Pide confirmación y respeta la negativa: nada cambia |
+| 10 | «qué repartidores están disponibles» | Lista real con la carga de cada repartidor |
+| 11 | ⭐ «cuáles son los números del negocio» | *“Esa información es solo de gerencia y dirección”* — la jerarquía de roles, audible |
 
 ---
 
-## 📊 GERENCIA — reportes tácticos
+## 📊 Gerencia — reportes tácticos
 
-Todo lo del empleado, más:
+La gerencia conserva toda la operación del empleado y suma los reportes del negocio.
 
-| Capacidad | Frase |
+| Capacidad | Frase de ejemplo |
 |---|---|
-| Números históricos del negocio (KPIs) | «cuáles son los números del negocio» |
-| Productos más vendidos (ranking real) | «cuáles son los productos más vendidos» |
-| Ventas de la semana vs semana anterior | «cómo van las ventas de la semana» |
-| Equipo y clientes registrados | «cuántos empleados tenemos» |
+| Números históricos del negocio (ingresos, pedidos, clientes) | «cuáles son los números del negocio» |
+| Ranking real de los productos más vendidos | «cuáles son los productos más vendidos» |
+| Ventas de la semana, comparadas con la anterior | «cómo van las ventas de la semana» |
+| Composición del equipo y clientes registrados | «cuántos empleados tenemos» |
 
-### Secuencia de demo (gerencia)
+### Secuencia de demostración
 
-1. Vincular con el código de su panel → «quién soy» → rol **gerencia**
-2. «cuáles son los números del negocio» → ingresos pagados históricos, pedidos, clientes, productos
-3. «cuáles son los productos más vendidos» → top con unidades e ingresos, **con fotos en pantalla**
-4. «cómo van las ventas de la semana» → últimos 7 días **con % de cambio** vs los 7 anteriores
-5. «cuántos empleados tenemos» → equipo por rol con nombres
-6. ⭐ Prueba de jerarquía: «dame el resumen del mes» → *"eso es solo de dirección general"*
+| # | Qué decir o hacer | Qué debe suceder |
+|---|---|---|
+| 1 | Vincular con el código de su panel → «quién soy» | Confirma el rol de **gerencia** |
+| 2 | «cuáles son los números del negocio» | Ingresos pagados históricos, pedidos totales, clientes activos y productos en catálogo |
+| 3 | «cuáles son los productos más vendidos» | Top de ventas con unidades e ingresos, con fotografías en pantalla |
+| 4 | «cómo van las ventas de la semana» | Últimos siete días **con el porcentaje de cambio** frente a la semana anterior |
+| 5 | «cuántos empleados tenemos» | El equipo por rol, con nombres, y el total de clientes |
+| 6 | ⭐ «dame el resumen del mes» | *“Eso es solo de dirección general”* — segundo nivel de la jerarquía |
 
 ---
 
-## 🏛 DIRECCIÓN GENERAL — reportes ejecutivos
+## 🏛 Dirección General — reportes ejecutivos
 
-Todo lo de gerencia, más:
+La dirección hereda todo lo anterior y accede a la información más sensible.
 
-| Capacidad | Frase |
+| Capacidad | Frase de ejemplo |
 |---|---|
-| Resumen ejecutivo del mes (vs mes anterior, ticket promedio) | «dame el resumen del mes» |
-| Auditoría del sistema (bitácora de movimientos) | «qué movimientos hubo en el sistema» |
+| Resumen ejecutivo del mes, con ticket promedio y comparativa | «dame el resumen del mes» |
+| Bitácora de auditoría del sistema | «qué movimientos hubo en el sistema» |
 
-### Secuencia de demo (dirección)
+### Secuencia de demostración
 
-1. Vincular con el código de su panel → «quién soy» → rol **dirección general**
-2. «dame el resumen del mes» → ingresos del mes, pedidos, ticket promedio y cierre del mes anterior
-3. «qué movimientos hubo en el sistema» → bitácora: movimientos de hoy + los más recientes con autor
-4. «cuáles son los productos más vendidos» → hereda todo lo de gerencia
-5. «marca el pedido [dígitos] como completado» → hereda también toda la operación
-
----
-
-## Características transversales (aplican a todo)
-
-- **IA conversacional (DeepSeek) con RAG**: conoce el **catálogo completo** con precios y
-  disponibilidad reales; mantiene memoria de la conversación («ese», «agrégalo», «el grande»);
-  responde preguntas de repostería general; y es **honesta**: lo que no está en la base de
-  datos "no lo manejamos". Además conoce sus propias capacidades y guía al usuario con la
-  frase exacta según su rol.
-- **APL en el 100% de las respuestas**: 6 plantillas del Alexa Design System + pantalla de
-  respaldo universal, todas con la **fotografía real de la sucursal de fondo**, logo real,
-  tipografía serif y paleta del sitio (verde oliva, dorado, arena). Responsivas (Echo Show
-  redondo/rectangular) y **táctiles**: categorías, productos, botones de tamaño A/B,
-  "Agregar al pedido" y "Ver horario" ejecutan acciones reales.
-- **Dispositivos sin pantalla**: todo funciona igual por voz pura (Echo Dot); la IA sabe si
-  hay pantalla y jamás dice "toca" en una bocina.
-- **Lectura por partes** de respuestas largas: continuar / resumir / detener.
-- **Confirmaciones** en toda acción importante (vaciar carrito, cambiar estado, marcar
-  agotado, asignar repartidor) y limpieza de estado si el usuario cambia de tema.
-- **Seguridad**: jerarquía de roles audible (empleado < gerencia < dirección), códigos de un
-  solo uso, rate limiting, logout con revocación en el backend, sesión persistente cifrada.
-- **Datos 100% dinámicos**: cero datos estáticos; todo se lee en vivo del backend
-  (demostrable cambiando un precio en el panel y preguntando de nuevo).
+| # | Qué decir o hacer | Qué debe suceder |
+|---|---|---|
+| 1 | Vincular con el código de su panel → «quién soy» | Confirma el rol de **dirección general** |
+| 2 | «dame el resumen del mes» | Ingresos del mes, número de pedidos, ticket promedio y cierre del mes anterior |
+| 3 | «qué movimientos hubo en el sistema» | La bitácora: movimientos de hoy y los más recientes, con su autor |
+| 4 | «cuáles son los productos más vendidos» | Hereda todos los reportes de gerencia |
+| 5 | «marca el pedido [dígitos] como completado» | Hereda también toda la operación del empleado |
 
 ---
 
-## Mapa rápido a la rúbrica
+## Características presentes en toda la skill
+
+- **Inteligencia artificial con datos reales.** La IA conoce el catálogo completo con precios y disponibilidad al momento, mantiene el hilo de la conversación (entiende «ese», «agrégalo», «el grande»), responde dudas generales de repostería y es honesta: lo que no existe en la base de datos, “no lo manejamos”. Además conoce sus propias funciones y le indica al usuario la frase exacta según su rol.
+- **Experiencia visual en el 100 % de las respuestas.** Seis plantillas del Alexa Design System más una pantalla de respaldo universal garantizan que ningún turno quede sin interfaz. Todas comparten la fotografía real de la sucursal como fondo, el logotipo, la tipografía serif y la paleta del sitio (verde oliva, dorado y arena), y se adaptan a pantallas rectangulares y redondas.
+- **Interacción táctil real.** Tocar una categoría, un producto, un botón de tamaño, “Agregar al pedido” o “Ver horario” ejecuta la acción, no solo la muestra.
+- **Compatibilidad con bocinas sin pantalla.** Todo funciona por voz pura; la skill detecta el dispositivo y nunca pide “tocar” en un Echo Dot.
+- **Respuestas largas administradas.** El usuario decide: continuar, pedir un resumen o detener la lectura.
+- **Confirmaciones y contexto.** Toda acción importante se confirma antes de ejecutarse, y si el usuario cambia de tema, las confirmaciones pendientes caducan solas.
+- **Seguridad de extremo a extremo.** Jerarquía de roles verificable por voz, códigos de un solo uso, límite de intentos por dispositivo, cierre de sesión con revocación en el servidor y manejo de sesiones expiradas.
+- **Información cien por ciento dinámica.** No existe ningún dato estático: todo se consulta en vivo al servidor. Puede demostrarse cambiando un precio en el panel y preguntando de nuevo.
+
+---
+
+## Correspondencia con la rúbrica
 
 | Criterio | Dónde se demuestra |
 |---|---|
-| Diseño conversacional (VUI) | Memoria («ese», «ya te decía»), confirmaciones, ayuda contextual, reprompts variados |
-| Integración con el sitio web | Carrito sincronizado (cliente paso 10), vinculación por código, notificaciones cruzadas |
-| APL / experiencia multimodal | 6 plantillas + respaldo universal, táctil, foto de sucursal, con/sin pantalla |
-| Identidad visual | Logo real, paleta del sitio, tipografía serif, foto de la sucursal |
-| Información dinámica | Total real del catálogo, precios en vivo, lectura por partes (continuar/resumir/detener) |
-| Manejo de errores y seguridad | Jerarquía de roles, códigos un solo uso, rate limit, sesión expirada, timeouts con respaldo |
-| Integración de IA | RAG con catálogo completo, honestidad, personalización por nombre y rol |
+| Diseño conversacional (VUI) | Memoria del contexto, confirmaciones, ayuda contextual y respuestas que nunca se repiten igual |
+| Integración con el sitio web | Carrito sincronizado (cliente, paso 10), vinculación por código y notificaciones cruzadas |
+| APL y experiencia multimodal | Seis plantillas más respaldo universal, interacción táctil y adaptación con y sin pantalla |
+| Diseño visual e identidad | Logotipo y fotografía reales de la sucursal, paleta y tipografía del sitio |
+| Funcionalidad e información dinámica | Totales y precios en vivo, y lectura por partes: continuar, resumir o detener |
+| Manejo de errores y seguridad | Jerarquía de roles, códigos de un solo uso, límites de intentos y sesiones con revocación |
+| Integración de IA | Respuestas contextualizadas y personalizadas, siempre coherentes con la base de datos |
+
+---
+
+*Recomendación para la presentación: generar cada código de vinculación justo antes de su sección (expiran en cinco minutos) y decir «cierra sesión» entre rol y rol, para que el cambio de privilegios se aprecie en vivo.*
