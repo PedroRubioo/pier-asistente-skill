@@ -370,12 +370,12 @@ async function ejecutarCrearPedido(h) {
       const total = Number(data.pedido.total || 0).toFixed(0);
       return responder(
         h,
-        `¡Pedido confirmado! Tu número es ${numero}, total ${total} pesos. Te avisamos cuando esté listo para recoger, y pagas ahí en tienda. ¡Gracias!`,
+        `¡Pedido confirmado! Tu número es ${numero}, total ${total} pesos. Ya está listo: pasa a recogerlo cuando gustes y pagas ahí en tienda. ¡Gracias!`,
         buildHeadline({
           subtituloHeader: 'Pedido confirmado',
           primario: numero,
           secundario: `Total $${total} MXN · Pagas al recoger en tienda`,
-          hint: 'Te llegará una notificación cuando esté listo',
+          hint: 'Ya está listo, pasa a recogerlo cuando gustes',
         }),
         'pedidoCreadoToken'
       );
