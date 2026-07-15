@@ -4,9 +4,11 @@
 // =====================================================================
 const Alexa = require('ask-sdk-core');
 const { PIER_WEB } = require('../lib/config');
-const { obtenerToken } = require('../lib/auth');
+const { obtenerToken, esPersonal, rolUsuario } = require('../lib/auth');
+const { comandosPersonal, ayudaPersonalVoz } = require('../lib/personal');
 const { responderConIA, aplParaContexto } = require('../lib/ia');
 const { responder } = require('../lib/respuesta');
+const { buildPanelComandos } = require('../lib/apl');
 const { aSsml } = require('../lib/ssml');
 
 function esIntent(h, nombre) {
@@ -23,7 +25,12 @@ const PreguntaPierIntentHandler = {
     let instruccion;
     if (!pregunta) {
       pregunta = 'el usuario hizo un comentario o pregunta corta';
-      instruccion = `El usuario dijo algo corto sin contenido específico (probablemente un comentario casual tipo "está rico", "me gusta", "gracias", "ok", "perfecto"). Responde de forma natural y conversacional usando el ESTADO CONVERSACIONAL si existe:
+      instruccion = esPersonal(h)
+        ? `El usuario (personal de Pier) dijo algo corto sin contenido específico (tipo "está rico", "gracias", "ok"). Responde como colega de trabajo, natural y breve, SIN ofertas ni preguntas de venta:
+- Si hay producto activo: puedes comentar sobre él de forma informativa.
+- Si es un agradecimiento: "de nada, ¿algo más que revisemos?"
+- Máximo 1 a 2 oraciones cortas.`
+        : `El usuario dijo algo corto sin contenido específico (probablemente un comentario casual tipo "está rico", "me gusta", "gracias", "ok", "perfecto"). Responde de forma natural y conversacional usando el ESTADO CONVERSACIONAL si existe:
 - Si hay producto activo: refiérete a él ("qué bueno que te guste el Cheesecake Fresa, ¿te lo aparto?")
 - Si es un agradecimiento: "de nada, ¿algo más en lo que te ayude?"
 - Si es comentario positivo: agradece y ofrece otra opción o pregunta si quiere algo más.
@@ -69,6 +76,15 @@ const HelpIntentHandler = {
       speak = 'Te estoy leyendo la lista por partes: di continúa para escuchar más, pide un resumen, o di basta para parar.';
     } else if (!obtenerToken(h)) {
       speak = 'Puedes preguntarme por postres, precios, promociones u horario. Y si vinculas tu cuenta con el código de tu perfil en la web, también te ayudo con tu carrito, tus pedidos y tus favoritos. ¿Qué se te antoja?';
+    } else if (esPersonal(h)) {
+      // Ayuda del PERSONAL: sus operaciones según jerarquía, con panel en pantalla
+      const rol = rolUsuario(h);
+      return responder(
+        h,
+        ayudaPersonalVoz(rol),
+        buildPanelComandos('Ayuda · Panel del personal', comandosPersonal(rol), 'Dime cualquiera de estas frases'),
+        'ayudaToken'
+      );
     } else {
       speak = 'Puedes preguntarme lo que quieras: qué postres tenemos, cuánto cuesta un cheesecake, agregar algo a tu carrito, revisar tus pedidos, o pedirme consejo para tu evento. ¿En qué te ayudo?';
     }
@@ -105,7 +121,9 @@ const FallbackIntentHandler = {
 
     const instruccion = tieneContexto
       ? `El usuario dijo algo corto que no logramos transcribir bien. Pero hay contexto previo en la conversación. Responde de forma natural usando ese contexto: si estaban hablando de un producto, sigue la conversación con una pregunta abierta tipo "¿quieres saber otra cosa del Cheesecake Fresa?" o ofrece otra opción relacionada. Sé breve, máximo 1 o 2 oraciones, conversacional. NO digas "no te entendí".`
-      : `El usuario dijo algo que no logramos transcribir bien y no hay contexto previo. Da un saludo corto recordando qué puedes hacer ("te puedo decir precios, recomendarte algo, darte el horario o las promos, qué se te antoja"). Máximo 2 oraciones, tono amigable. NO digas "no te entendí" de forma seca.`;
+      : esPersonal(h)
+        ? `El usuario (personal de Pier) dijo algo que no logramos transcribir bien y no hay contexto previo. Oriéntalo brevemente a sus operaciones ("puedo decirte cómo van los pedidos, las ventas de hoy o el inventario, ¿qué revisamos?"). Máximo 2 oraciones, tono de colega. NO digas "no te entendí" de forma seca.`
+        : `El usuario dijo algo que no logramos transcribir bien y no hay contexto previo. Da un saludo corto recordando qué puedes hacer ("te puedo decir precios, recomendarte algo, darte el horario o las promos, qué se te antoja"). Máximo 2 oraciones, tono amigable. NO digas "no te entendí" de forma seca.`;
 
     let respuesta;
     try { respuesta = await responderConIA(h, instruccion, 'continúa la conversación de forma natural'); }

@@ -5,7 +5,8 @@
 const Alexa = require('ask-sdk-core');
 const { PIER_WEB, PIER_DIRECCION, PIER_TELEFONO } = require('../lib/config');
 const { precalentarBackend, obtenerContexto, obtenerCatalogoCompleto, fetchPier } = require('../lib/api');
-const { obtenerUsuarioAuth } = require('../lib/auth');
+const { obtenerUsuarioAuth, ROLES_PERSONAL, esPersonal } = require('../lib/auth');
+const { comandosPersonal } = require('../lib/personal');
 const { estaAbiertoAhora, describirHorario } = require('../lib/horario');
 const { normalizar } = require('../lib/texto');
 const { responderConIA } = require('../lib/ia');
@@ -15,6 +16,7 @@ const {
   buildCardsCategorias,
   buildImageList,
   buildInfoNegocio,
+  buildPanelComandos,
 } = require('../lib/apl');
 
 function esIntent(h, nombre) {
@@ -39,6 +41,23 @@ const LaunchRequestHandler = {
   handle(h) {
     precalentarBackend();
     const usuario = obtenerUsuarioAuth(h);
+
+    // Sesión de personal: bienvenida de trabajo con su panel de comandos,
+    // nada de "qué se te antoja" ni pantallas de venta
+    if (usuario && ROLES_PERSONAL.includes(usuario.rol)) {
+      const nombre = usuario.nombre ? `, ${usuario.nombre}` : '';
+      return responder(
+        h,
+        `¡Hola de nuevo${nombre}! ¿Cómo va la tienda? Pregúntame por los pedidos, las ventas de hoy, el inventario o las entregas.`,
+        buildPanelComandos(
+          usuario.nombre ? `Panel de voz · ${usuario.nombre}` : 'Panel de voz del personal',
+          comandosPersonal(usuario.rol),
+          'Di "ayuda" para escuchar todo lo que puedo hacer'
+        ),
+        'welcomeToken'
+      );
+    }
+
     const speak = usuario && usuario.nombre
       ? `¡Hola de nuevo, ${usuario.nombre}! Qué gusto tenerte por aquí. ¿Qué se te antoja hoy?`
       : usuario && usuario.id
@@ -67,7 +86,7 @@ const ConsultarCatalogoIntentHandler = {
       // Catálogo completo para poder ofrecer lectura por partes
       const completo = await obtenerCatalogoCompleto();
       const total = completo.length;
-      const instruccion = `El usuario pregunta qué productos vende Pier. Menciona 4 o 5 productos REALES del bloque PRODUCTOS DEL CATÁLOGO con sus precios, en tono natural y conversacional.${total > 6 ? ` En el catálogo hay ${total} productos en total: cierra diciéndoselo y preguntando si quiere escuchar más.` : ' Al final pregúntale qué se le antoja.'}`;
+      const instruccion = `El usuario pregunta qué productos vende Pier. Menciona 4 o 5 productos REALES del bloque PRODUCTOS DEL CATÁLOGO con sus precios, en tono natural y conversacional.${total > 6 ? ` En el catálogo hay ${total} productos en total: cierra diciéndoselo y preguntando si quiere escuchar más.` : (esPersonal(h) ? ' Al final pregúntale si quiere revisar algo más.' : ' Al final pregúntale qué se le antoja.')}`;
       respuesta = await responderConIA(h, instruccion, 'qué productos tienen');
       const items = completo.slice(0, 6).map(productoAItemLista);
       aplDoc = buildImageList('Nuestro catálogo', items, total > 6 ? 'Di "sí" o "continúa" para escuchar más' : 'Toca un producto para ver su detalle');
@@ -223,27 +242,34 @@ const CotizarEnvioIntentHandler = {
           colonia = oficial.colonia;
         }
       }
+      // Al personal (cotizando para un cliente en mostrador) se le da solo
+      // el dato; al cliente se le acompaña con la invitación a pedir
+      const staff = esPersonal(h);
       if (data.cobertura) {
         return responder(
           h,
-          `¡Sí llegamos! El envío a ${colonia} cuesta ${Number(data.tarifa).toFixed(0)} pesos, zona ${data.zona}. Haz tu pedido a domicilio desde la web, o si prefieres, pídelo conmigo y lo recoges en tienda.`,
+          staff
+            ? `Sí hay cobertura: el envío a ${colonia} cuesta ${Number(data.tarifa).toFixed(0)} pesos, zona ${data.zona}.`
+            : `¡Sí llegamos! El envío a ${colonia} cuesta ${Number(data.tarifa).toFixed(0)} pesos, zona ${data.zona}. Haz tu pedido a domicilio desde la web, o si prefieres, pídelo conmigo y lo recoges en tienda.`,
           buildHeadline({
             subtituloHeader: 'Envío a domicilio',
             primario: colonia,
             secundario: `Envío $${Number(data.tarifa).toFixed(0)} MXN · Zona ${data.zona}`,
-            hint: 'Pedidos a domicilio en la web',
+            hint: staff ? 'Tarifas completas en el panel web' : 'Pedidos a domicilio en la web',
           }),
           'envioToken'
         );
       }
       return responder(
         h,
-        `Por ahora no tenemos cobertura de envío en ${colonia}, pero puedes hacer tu pedido conmigo y recogerlo en tienda. ¿Te late?`,
+        staff
+          ? `${colonia} no tiene cobertura de envío por ahora. Las zonas completas están en el panel web.`
+          : `Por ahora no tenemos cobertura de envío en ${colonia}, pero puedes hacer tu pedido conmigo y recogerlo en tienda. ¿Te late?`,
         buildHeadline({
           subtituloHeader: 'Envío a domicilio',
           primario: colonia,
-          secundario: 'Sin cobertura por ahora · Recoge en tienda',
-          hint: 'Di "confirma mi pedido" para pedir y recoger',
+          secundario: staff ? 'Sin cobertura por ahora' : 'Sin cobertura por ahora · Recoge en tienda',
+          hint: staff ? 'Zonas de envío en el panel web' : 'Pide conmigo y recoge en tienda',
         }),
         'envioToken'
       );

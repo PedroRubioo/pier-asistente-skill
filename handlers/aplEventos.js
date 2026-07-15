@@ -8,6 +8,7 @@
 // =====================================================================
 const Alexa = require('ask-sdk-core');
 const { fetchPier, obtenerContexto, productosEnCache } = require('../lib/api');
+const { esPersonal } = require('../lib/auth');
 const { describirHorario, estaAbiertoAhora } = require('../lib/horario');
 const { responder } = require('../lib/respuesta');
 const { buildImageList, buildDetalleProducto, buildHeadline } = require('../lib/apl');
@@ -51,10 +52,14 @@ async function manejarCategoria(h, nombreCategoria) {
     id: p.id,
   }));
   const nombres = productos.slice(0, 3).map(p => p.nombre).join(', ');
+  // Al personal se le informa, no se le vende
+  const remate = esPersonal(h)
+    ? 'Toca uno para ver su ficha.'
+    : 'Toca uno para ver su detalle o dime cuál se te antoja.';
   return responder(
     h,
-    `De ${nombreCategoria} tenemos ${nombres}${productos.length > 3 ? ', entre otros' : ''}. Toca uno para ver su detalle o dime cuál se te antoja.`,
-    buildImageList(nombreCategoria, items, 'Toca un producto para ver su detalle'),
+    `De ${nombreCategoria} tenemos ${nombres}${productos.length > 3 ? ', entre otros' : ''}. ${remate}`,
+    buildImageList(nombreCategoria, items, esPersonal(h) ? 'Toca un producto para ver su ficha' : 'Toca un producto para ver su detalle'),
     'categoriaProductosToken'
   );
 }
@@ -71,12 +76,20 @@ function manejarDetalleProducto(h, id) {
   };
   h.attributesManager.setSessionAttributes(attrs);
 
+  const paraPersonal = esPersonal(h);
   const precioC = Number(producto.precio_chico || 0).toFixed(0);
   const tieneGrande = producto.precio_grande && Number(producto.precio_grande) !== Number(producto.precio_chico);
-  const habla = tieneGrande
-    ? `El ${producto.nombre} está en ${precioC} pesos el chico y ${Number(producto.precio_grande).toFixed(0)} el grande. ¿Te lo agrego al carrito?`
-    : `El ${producto.nombre} está en ${precioC} pesos. ¿Te lo agrego al carrito?`;
-  return responder(h, habla, buildDetalleProducto(producto), 'productoToken');
+  const precios = tieneGrande
+    ? `El ${producto.nombre} está en ${precioC} pesos el chico y ${Number(producto.precio_grande).toFixed(0)} el grande.`
+    : `El ${producto.nombre} está en ${precioC} pesos.`;
+  // Personal: ficha informativa con stock, sin oferta. Cliente: ficha con botón
+  const stockHabla = paraPersonal && producto.stock_online !== undefined && producto.stock_online !== null
+    ? ` En línea ${Number(producto.stock_online) === 0 ? 'está agotado' : `quedan ${Number(producto.stock_online)} unidades`}.`
+    : '';
+  const habla = paraPersonal
+    ? `${precios}${stockHabla}`
+    : `${precios} ¿Te lo agrego al carrito?`;
+  return responder(h, habla, buildDetalleProducto(producto, { paraPersonal }), 'productoToken');
 }
 
 async function manejarAgregar(h, id) {

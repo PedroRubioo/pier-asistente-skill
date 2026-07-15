@@ -8,6 +8,7 @@
 // =====================================================================
 const Alexa = require('ask-sdk-core');
 const { obtenerCatalogoCompleto, productosEnCache } = require('../lib/api');
+const { esPersonal } = require('../lib/auth');
 const { responderConIA, aplParaContexto } = require('../lib/ia');
 const { responder } = require('../lib/respuesta');
 const { buildImageList, buildMultipleChoice } = require('../lib/apl');
@@ -66,16 +67,17 @@ async function continuarPaginacion(h) {
   if (quedan <= 0) delete attrs.paginacion;
   h.attributesManager.setSessionAttributes(attrs);
 
+  const staff = esPersonal(h);
   const cierre = quedan > 0
     ? ` Quedan ${quedan} más: dime continúa, pide un resumen, o di basta.`
-    : ' Y con eso terminamos. ¿Cuál se te antojó?';
+    : (staff ? ' Y con eso terminamos. ¿Algo más que revisemos?' : ' Y con eso terminamos. ¿Cuál se te antojó?');
   return responder(
     h,
     `${habla}.${cierre}`,
     buildImageList(
       pag.titulo || 'Nuestro catálogo',
       items,
-      quedan > 0 ? 'Di "continúa" para escuchar más' : 'Pide el que más se te antoje'
+      quedan > 0 ? 'Di "continúa" para escuchar más' : (staff ? 'Toca uno para ver su ficha' : 'Pide el que más se te antoje')
     ),
     'paginacionToken'
   );
@@ -96,7 +98,7 @@ async function resumirPaginacion(h) {
     const rango = precios.length
       ? `, con precios entre ${Math.min(...precios).toFixed(0)} y ${Math.max(...precios).toFixed(0)} pesos`
       : '';
-    texto = `Te resumo lo que falta: ${restantes.length} productos más${cats ? `, sobre todo ${cats}` : ''}${rango}. El catálogo completo con fotos está en la web. ¿Se te antojó alguno?`;
+    texto = `Te resumo lo que falta: ${restantes.length} productos más${cats ? `, sobre todo ${cats}` : ''}${rango}. El catálogo completo con fotos está en la web. ${esPersonal(h) ? '¿Algo más que revisemos?' : '¿Se te antojó alguno?'}`;
   } else {
     const restantes = Math.max(0, (pag.items || []).length - pag.offset);
     texto = `Te quedan ${restantes} más por escuchar; el detalle completo lo tienes en la web. ¿Algo más en lo que te ayude?`;
@@ -143,10 +145,11 @@ const YesIntentHandler = {
       );
     }
 
-    // 4) "Sí" a una oferta de la IA ("¿te lo aparto?"): agrega el producto activo
+    // 4) "Sí" a una oferta de la IA ("¿te lo aparto?"): agrega el producto activo.
+    // Solo para clientes: al personal no se le vende, así que su "sí" es conversacional
     const pa = attrs.productoActivo;
     const ultimaIA = (attrs.historial || []).filter(m => m.role === 'assistant').slice(-1)[0]?.content || '';
-    if (pa && pa.id && /aparto|agrego|carrito|apartamos|pedido/i.test(ultimaIA)) {
+    if (!esPersonal(h) && pa && pa.id && /aparto|agrego|carrito|apartamos|pedido/i.test(ultimaIA)) {
       const full = productosEnCache().find(x => x.id === pa.id) || pa;
       return iniciarAgregadoProducto(h, full);
     }

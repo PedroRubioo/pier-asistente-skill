@@ -6,11 +6,12 @@ const Alexa = require('ask-sdk-core');
 const fetch = require('node-fetch');
 const { obtenerConfig } = require('../lib/config');
 const { fetchPierAuth, obtenerCatalogoCompleto } = require('../lib/api');
-const { obtenerToken, limpiarVinculacion } = require('../lib/auth');
+const { obtenerToken, limpiarVinculacion, ROLES_PERSONAL } = require('../lib/auth');
+const { comandosPersonal, rolLegible } = require('../lib/personal');
 const { normalizar } = require('../lib/texto');
 const { responderConIA } = require('../lib/ia');
 const { responder, responderVincular } = require('../lib/respuesta');
-const { buildHeadline, buildImageList } = require('../lib/apl');
+const { buildHeadline, buildImageList, buildPanelComandos } = require('../lib/apl');
 
 function esIntent(h, nombre) {
   return Alexa.getRequestType(h.requestEnvelope) === 'IntentRequest'
@@ -66,6 +67,16 @@ const VincularCuentaIntentHandler = {
           await h.attributesManager.savePersistentAttributes();
         } catch (e) {
           console.error('No se pudo persistir la vinculación:', e.message);
+        }
+        // Al personal se le recibe como equipo, con su panel de comandos;
+        // al cliente, con las funciones de su cuenta
+        if (ROLES_PERSONAL.includes(usuario.rol)) {
+          return responder(
+            h,
+            `¡Listo, ${usuario.nombre}! Quedaste vinculado como ${rolLegible(usuario.rol)}. Pregúntame cómo van los pedidos, las ventas de hoy o el inventario. ¿Por dónde empezamos?`,
+            buildPanelComandos(`Panel de voz · ${usuario.nombre}`, comandosPersonal(usuario.rol), 'Di "ayuda" para escuchar todo lo que puedo hacer'),
+            'vinculadoToken'
+          );
         }
         return responder(h, `¡Listo, ${usuario.nombre}! Tu cuenta quedó vinculada en esta Alexa. Ya puedes pedirme tu carrito, tus pedidos o tus favoritos. ¿En qué te ayudo?`);
       }
@@ -126,6 +137,14 @@ const LoginEmpleadoIntentHandler = {
         };
         attrs.intentosLogin = 0;
         h.attributesManager.setSessionAttributes(attrs);
+        if (ROLES_PERSONAL.includes(data.user.rol)) {
+          return responder(
+            h,
+            `Hola ${data.user.nombre}, ya estás dentro como ${rolLegible(data.user.rol)}. Pregúntame cómo van los pedidos, las ventas de hoy o el inventario.`,
+            buildPanelComandos(`Panel de voz · ${data.user.nombre}`, comandosPersonal(data.user.rol), 'Di "ayuda" para escuchar todo lo que puedo hacer'),
+            'loginToken'
+          );
+        }
         return responder(h, `Hola ${data.user.nombre}, bienvenido. ¿En qué te ayudo?`);
       }
 
@@ -323,6 +342,7 @@ const MiPerfilIntentHandler = {
           subtituloHeader: 'Tu perfil',
           primario: nombreCompleto || 'Tu perfil',
           secundario: `${u.email || ''} · Rol: ${rolTxt}`,
+          hint: 'Di "cierra sesión" para desvincular esta Alexa',
         }),
         'miPerfilToken'
       );
@@ -439,6 +459,7 @@ const QuitarFavoritoIntentHandler = {
           subtituloHeader: 'Favoritos',
           primario: producto.nombre,
           secundario: 'Quitado de tus favoritos',
+          hint: 'Di "mis favoritos" para escuchar los que quedan',
         }),
         'favoritoToken'
       );

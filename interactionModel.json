@@ -527,7 +527,7 @@
           "name": "ReponerStockIntent",
           "slots": [
             { "name": "cantidad", "type": "AMAZON.NUMBER" },
-            { "name": "producto", "type": "AMAZON.SearchQuery" }
+            { "name": "producto", "type": "TIPO_PRODUCTO" }
           ],
           "samples": [
             "repón {cantidad} unidades de {producto}",
@@ -541,7 +541,7 @@
         {
           "name": "MarcarAgotadoIntent",
           "slots": [
-            { "name": "producto", "type": "AMAZON.SearchQuery" }
+            { "name": "producto", "type": "TIPO_PRODUCTO" }
           ],
           "samples": [
             "marca {producto} como agotado",
@@ -1297,6 +1297,526 @@
         }
       ],
       "types": [
+        {
+          "name": "TIPO_PRODUCTO",
+          "values": [
+            {
+              "name": {
+                "value": "Americano"
+              }
+            },
+            {
+              "name": {
+                "value": "Bisquet con Mermelada"
+              }
+            },
+            {
+              "name": {
+                "value": "Bisquet Sencillo"
+              }
+            },
+            {
+              "name": {
+                "value": "Brownies"
+              }
+            },
+            {
+              "name": {
+                "value": "Brownies Tortuga"
+              }
+            },
+            {
+              "name": {
+                "value": "Cake Bites Doble Chocolate"
+              }
+            },
+            {
+              "name": {
+                "value": "Cake Bites Vainilla Queso Fresa"
+              }
+            },
+            {
+              "name": {
+                "value": "Cake Bites Zanahoria"
+              }
+            },
+            {
+              "name": {
+                "value": "Capuccino Tradicional"
+              }
+            },
+            {
+              "name": {
+                "value": "Caramel Macchiato"
+              }
+            },
+            {
+              "name": {
+                "value": "Chai Elefante Vainilla"
+              }
+            },
+            {
+              "name": {
+                "value": "Chai Flamingo Vanilla"
+              }
+            },
+            {
+              "name": {
+                "value": "Cheesecake Ferrero-Nutella",
+                "synonyms": [
+                  "cheesecake ferrero",
+                  "cheesecake de ferrero",
+                  "ferrero nutella"
+                ]
+              }
+            },
+            {
+              "name": {
+                "value": "Cheesecake Fresa",
+                "synonyms": [
+                  "cheesecake de fresa"
+                ]
+              }
+            },
+            {
+              "name": {
+                "value": "Cheesecake Oreo",
+                "synonyms": [
+                  "cheesecake de oreo"
+                ]
+              }
+            },
+            {
+              "name": {
+                "value": "Cheesecake Tortuga"
+              }
+            },
+            {
+              "name": {
+                "value": "Cheesecake Zarzamora",
+                "synonyms": [
+                  "cheesecake de zarzamora"
+                ]
+              }
+            },
+            {
+              "name": {
+                "value": "Chocoflan",
+                "synonyms": [
+                  "chocoflán",
+                  "el chocoflán"
+                ]
+              }
+            },
+            {
+              "name": {
+                "value": "Coffee Cake"
+              }
+            },
+            {
+              "name": {
+                "value": "Conchas"
+              }
+            },
+            {
+              "name": {
+                "value": "Cuchareable Lotus"
+              }
+            },
+            {
+              "name": {
+                "value": "Cuchareable Maracuyá"
+              }
+            },
+            {
+              "name": {
+                "value": "Cuchareable Tiramisú"
+              }
+            },
+            {
+              "name": {
+                "value": "Dirty Taro"
+              }
+            },
+            {
+              "name": {
+                "value": "Dirty Taro Sugar Free"
+              }
+            },
+            {
+              "name": {
+                "value": "Dragon Palm Ice Milk"
+              }
+            },
+            {
+              "name": {
+                "value": "Dragon Splash"
+              }
+            },
+            {
+              "name": {
+                "value": "Flan Napolitano",
+                "synonyms": [
+                  "flan"
+                ]
+              }
+            },
+            {
+              "name": {
+                "value": "Frappe Cajeta"
+              }
+            },
+            {
+              "name": {
+                "value": "Frappe Capuccino"
+              }
+            },
+            {
+              "name": {
+                "value": "Frappe Caramelo"
+              }
+            },
+            {
+              "name": {
+                "value": "Frappe Matcha"
+              }
+            },
+            {
+              "name": {
+                "value": "Frappe Moka"
+              }
+            },
+            {
+              "name": {
+                "value": "Frappe Nutella"
+              }
+            },
+            {
+              "name": {
+                "value": "Frappe Oreo"
+              }
+            },
+            {
+              "name": {
+                "value": "Frappe Taro"
+              }
+            },
+            {
+              "name": {
+                "value": "Frappe Tortuga"
+              }
+            },
+            {
+              "name": {
+                "value": "Freeze Mango Chilito"
+              }
+            },
+            {
+              "name": {
+                "value": "Fresa Matcha Bliss"
+              }
+            },
+            {
+              "name": {
+                "value": "Galletas Chocoavellanas"
+              }
+            },
+            {
+              "name": {
+                "value": "Galletas Chocochips"
+              }
+            },
+            {
+              "name": {
+                "value": "Galletas de Avena",
+                "synonyms": [
+                  "galletas de avena con pasas"
+                ]
+              }
+            },
+            {
+              "name": {
+                "value": "Gelatina Panna Cotta"
+              }
+            },
+            {
+              "name": {
+                "value": "Latte Cajetoso"
+              }
+            },
+            {
+              "name": {
+                "value": "Latte con Foam Lotus"
+              }
+            },
+            {
+              "name": {
+                "value": "Latte Helado de Avena"
+              }
+            },
+            {
+              "name": {
+                "value": "Latte Tradicional"
+              }
+            },
+            {
+              "name": {
+                "value": "Latte Vainilla"
+              }
+            },
+            {
+              "name": {
+                "value": "Mango Matcha Bliss"
+              }
+            },
+            {
+              "name": {
+                "value": "Matcha"
+              }
+            },
+            {
+              "name": {
+                "value": "Matcha Cold Foam de Mango"
+              }
+            },
+            {
+              "name": {
+                "value": "Mini 3 Leches Chocolate"
+              }
+            },
+            {
+              "name": {
+                "value": "Mini 3 Leches Durazno"
+              }
+            },
+            {
+              "name": {
+                "value": "Mini 3 Leches Fresa"
+              }
+            },
+            {
+              "name": {
+                "value": "Mini Pay de Plátano"
+              }
+            },
+            {
+              "name": {
+                "value": "Moka Caliente"
+              }
+            },
+            {
+              "name": {
+                "value": "Mostachón Mixto",
+                "synonyms": [
+                  "mostachon",
+                  "mostachón"
+                ]
+              }
+            },
+            {
+              "name": {
+                "value": "Pastel Alemán",
+                "synonyms": [
+                  "pastel aleman",
+                  "el alemán"
+                ]
+              }
+            },
+            {
+              "name": {
+                "value": "Pastel de Zanahoria",
+                "synonyms": [
+                  "pastel zanahoria"
+                ]
+              }
+            },
+            {
+              "name": {
+                "value": "Pastel Doble Chocolate",
+                "synonyms": [
+                  "pastel de doble chocolate",
+                  "doble chocolate"
+                ]
+              }
+            },
+            {
+              "name": {
+                "value": "Pastel Dulce de Leche"
+              }
+            },
+            {
+              "name": {
+                "value": "Pastel Fresas con Crema"
+              }
+            },
+            {
+              "name": {
+                "value": "Pastel Glorioso"
+              }
+            },
+            {
+              "name": {
+                "value": "Pastel Queso con Zarzamora"
+              }
+            },
+            {
+              "name": {
+                "value": "Pay de Queso con Manzana",
+                "synonyms": [
+                  "pay de manzana"
+                ]
+              }
+            },
+            {
+              "name": {
+                "value": "Pay de Queso con Piña y Nuez",
+                "synonyms": [
+                  "pay de queso con piña",
+                  "pay de piña"
+                ]
+              }
+            },
+            {
+              "name": {
+                "value": "Pay de Queso con Plátano",
+                "synonyms": [
+                  "pay de plátano",
+                  "pay de queso con platano"
+                ]
+              }
+            },
+            {
+              "name": {
+                "value": "Pie Bites"
+              }
+            },
+            {
+              "name": {
+                "value": "Rebanada Cheesecake Ferrero"
+              }
+            },
+            {
+              "name": {
+                "value": "Rebanada Cheesecake Fresa"
+              }
+            },
+            {
+              "name": {
+                "value": "Rebanada Cheesecake Oreo"
+              }
+            },
+            {
+              "name": {
+                "value": "Rebanada Cheesecake Tortuga"
+              }
+            },
+            {
+              "name": {
+                "value": "Rebanada Cheesecake Zarzamora"
+              }
+            },
+            {
+              "name": {
+                "value": "Rebanada de Chocoflan"
+              }
+            },
+            {
+              "name": {
+                "value": "Rebanada de Flan Napolitano"
+              }
+            },
+            {
+              "name": {
+                "value": "Rebanada de Zanahoria"
+              }
+            },
+            {
+              "name": {
+                "value": "Rebanada Doble Chocolate"
+              }
+            },
+            {
+              "name": {
+                "value": "Rebanada Pay de Queso Piña"
+              }
+            },
+            {
+              "name": {
+                "value": "Roles de Canela"
+              }
+            },
+            {
+              "name": {
+                "value": "Sandía Pica Fresa"
+              }
+            },
+            {
+              "name": {
+                "value": "Smoothie Cremoso Fresa"
+              }
+            },
+            {
+              "name": {
+                "value": "Smoothie Cremoso Zarzamora"
+              }
+            },
+            {
+              "name": {
+                "value": "Sodas Italianas"
+              }
+            },
+            {
+              "name": {
+                "value": "Tart Bites"
+              }
+            },
+            {
+              "name": {
+                "value": "Tartaleta Chica de Limón"
+              }
+            },
+            {
+              "name": {
+                "value": "Tartaleta de Fresa"
+              }
+            },
+            {
+              "name": {
+                "value": "Tartaleta Grande de Limón"
+              }
+            },
+            {
+              "name": {
+                "value": "Tisanas"
+              }
+            },
+            {
+              "name": {
+                "value": "Tres Leches con Chocolate y Almendras",
+                "synonyms": [
+                  "tres leches de chocolate"
+                ]
+              }
+            },
+            {
+              "name": {
+                "value": "Tres Leches con Durazno y Nuez",
+                "synonyms": [
+                  "tres leches de durazno"
+                ]
+              }
+            },
+            {
+              "name": {
+                "value": "Tres Leches con Fresas y Cobertura de Yogurt",
+                "synonyms": [
+                  "tres leches de fresa",
+                  "tres leches con fresas"
+                ]
+              }
+            }
+          ]
+        },
         {
           "name": "TIPO_ESTADO_ENTREGA",
           "values": [

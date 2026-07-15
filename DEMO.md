@@ -95,7 +95,7 @@ El cliente conserva todo lo anterior y además administra su cuenta y su carrito
 
 ## 👔 Empleado — operación del mostrador
 
-El empleado conserva todo lo del cliente y suma la operación diaria del negocio.
+El empleado conserva todo lo del cliente y suma la operación diaria del negocio. La experiencia completa cambia con el rol: al vincular recibe su **panel de comandos** en pantalla, las fichas de producto se vuelven informativas (muestran el stock en línea, sin botón de compra) y la IA le habla como colega de trabajo, sin tono de venta.
 
 | Capacidad | Frase de ejemplo |
 |---|---|
@@ -118,7 +118,8 @@ El empleado conserva todo lo del cliente y suma la operación diaria del negocio
 | # | Qué decir o hacer | Qué debe suceder |
 |---|---|---|
 | 1 | En la web: Dashboard del empleado → “Vincular con Alexa” | Mismo flujo de código que el cliente |
-| 2 | «vincula mi cuenta con el código [X]» → «quién soy» | Confirma el rol de **empleado** |
+| 2 | «vincula mi cuenta con el código [X]» → «quién soy» | Confirma el rol de **empleado** y muestra el **panel de comandos del personal** en pantalla |
+| 2b | «ayuda» | Ayuda del personal según su jerarquía, con el panel de frases en pantalla |
 | 3 | «cómo van las ventas hoy» | Pedidos del día, monto total y desglose por estado |
 | 4 | «qué pedidos están pendientes» | Solo los pedidos programados en espera |
 | 5 | «qué lleva el pedido [dígitos]» | Productos, cliente y total del pedido |
@@ -180,7 +181,8 @@ La dirección hereda todo lo anterior y accede a la información más sensible.
 
 - **Inteligencia artificial con datos reales.** La IA conoce el catálogo completo con precios y disponibilidad al momento, mantiene el hilo de la conversación (entiende «ese», «agrégalo», «el grande»), responde dudas generales de repostería y es honesta: lo que no existe en la base de datos, “no lo manejamos”. Además conoce sus propias funciones y le indica al usuario la frase exacta según su rol.
 - **Experiencia visual en el 100 % de las respuestas.** Seis plantillas del Alexa Design System más una pantalla de respaldo universal garantizan que ningún turno quede sin interfaz. Todas comparten la fotografía real de la sucursal como fondo, el logotipo, la tipografía serif y la paleta del sitio (verde oliva, dorado y arena), con **encabezado de marca y pie de página presentes en cada pantalla**, y se adaptan a pantallas rectangulares y redondas.
-- **Lo que se dice, se ve.** Cuando la inteligencia artificial menciona productos en la conversación libre (una recomendación, un «continúa», un «sí»), esos productos aparecen automáticamente en pantalla: como lista con fotografías si son varios, o como ficha con el botón "Agregar al pedido" si es uno.
+- **Lo que se dice, se ve.** Cuando la inteligencia artificial menciona productos en la conversación libre (una recomendación, un «continúa», un «sí»), esos productos aparecen automáticamente en pantalla: como lista con fotografías si son varios, o como ficha si es uno — con el botón “Agregar al pedido” para el cliente, o con el stock en línea para el personal.
+- **La experiencia se adapta al rol.** El personal no ve la skill de cliente: su bienvenida es de trabajo, con un panel de comandos acorde a su jerarquía (operación para el empleado, más reportes para gerencia y dirección); sus fichas de producto son informativas, sin botones de compra; y la IA le habla como compañera de equipo — nunca le vende, y si le preguntan una cifra operativa que no tiene, jamás la inventa: indica la frase exacta para consultar el dato real.
 - **Interacción táctil real.** Tocar una categoría, un producto, un botón de tamaño, “Agregar al pedido” o “Ver horario” ejecuta la acción, no solo la muestra.
 - **Compatibilidad con bocinas sin pantalla.** Todo funciona por voz pura; la skill detecta el dispositivo y nunca pide “tocar” en un Echo Dot.
 - **Respuestas largas administradas.** El usuario decide: continuar, pedir un resumen o detener la lectura.
@@ -194,7 +196,7 @@ La dirección hereda todo lo anterior y accede a la información más sensible.
 
 | Criterio | Dónde se demuestra |
 |---|---|
-| Diseño conversacional (VUI) | Memoria del contexto, confirmaciones, ayuda contextual y respuestas que nunca se repiten igual |
+| Diseño conversacional (VUI) | Memoria del contexto, confirmaciones, ayuda contextual, experiencia adaptada al rol y respuestas que nunca se repiten igual |
 | Integración con el sitio web | Carrito sincronizado (cliente, paso 10), vinculación por código y notificaciones cruzadas |
 | APL y experiencia multimodal | Seis plantillas más respaldo universal, todo producto mencionado se ve en pantalla, interacción táctil y adaptación con y sin pantalla |
 | Diseño visual e identidad | Logotipo y fotografía reales de la sucursal, paleta y tipografía del sitio |

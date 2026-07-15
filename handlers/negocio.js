@@ -83,7 +83,7 @@ const CambiarEstadoPedidoIntentHandler = {
       return responder(h, '¿Cuál pedido? Dime los últimos cuatro dígitos del número, por ejemplo: marca el pedido sesenta y seis cincuenta y uno como listo.');
     }
     if (!estadoBD) {
-      return responder(h, '¿A qué estado lo cambio? Puede ser en preparación, listo, completado o cancelado.');
+      return responder(h, '¿A qué estado lo cambio? Puede ser listo, completado o cancelado.');
     }
 
     try {
