@@ -450,7 +450,7 @@ const ReponerStockIntentHandler = {
     const acceso = accesoPersonal(h);
     if (acceso.rechazo) return acceso.rechazo;
     const cantidad = parseInt(Alexa.getSlotValue(h.requestEnvelope, 'cantidad') || '0');
-    const dicho = Alexa.getSlotValue(h.requestEnvelope, 'producto') || '';
+    const dicho = Alexa.getSlotValue(h.requestEnvelope, 'productoInventario') || '';
     if (!cantidad || cantidad < 1) {
       return responder(h, '¿Cuántas unidades repongo y de qué producto? Por ejemplo: repón diez unidades del chocoflán.');
     }
@@ -497,7 +497,7 @@ const MarcarAgotadoIntentHandler = {
   async handle(h) {
     const acceso = accesoPersonal(h);
     if (acceso.rechazo) return acceso.rechazo;
-    const dicho = Alexa.getSlotValue(h.requestEnvelope, 'producto') || '';
+    const dicho = Alexa.getSlotValue(h.requestEnvelope, 'productoInventario') || '';
     try {
       const catalogo = await obtenerCatalogoCompleto();
       const t = normalizar(dicho).replace(/\b(el|la|los|las|de|del)\b/g, ' ');

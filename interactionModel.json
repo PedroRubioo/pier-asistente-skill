@@ -527,29 +527,29 @@
           "name": "ReponerStockIntent",
           "slots": [
             { "name": "cantidad", "type": "AMAZON.NUMBER" },
-            { "name": "producto", "type": "TIPO_PRODUCTO" }
+            { "name": "productoInventario", "type": "TIPO_PRODUCTO" }
           ],
           "samples": [
-            "repón {cantidad} unidades de {producto}",
-            "repón {cantidad} de {producto}",
-            "agrega {cantidad} unidades de stock de {producto}",
-            "suma {cantidad} unidades de {producto} al inventario",
-            "mete {cantidad} unidades de {producto} al stock"
+            "repón {cantidad} unidades de {productoInventario}",
+            "repón {cantidad} de {productoInventario}",
+            "agrega {cantidad} unidades de stock de {productoInventario}",
+            "suma {cantidad} unidades de {productoInventario} al inventario",
+            "mete {cantidad} unidades de {productoInventario} al stock"
           ]
         },
 
         {
           "name": "MarcarAgotadoIntent",
           "slots": [
-            { "name": "producto", "type": "TIPO_PRODUCTO" }
+            { "name": "productoInventario", "type": "TIPO_PRODUCTO" }
           ],
           "samples": [
-            "marca {producto} como agotado",
-            "marca como agotado {producto}",
-            "pon {producto} como agotado",
-            "ya no hay {producto}",
-            "se acabó {producto}",
-            "agota {producto} en línea"
+            "marca {productoInventario} como agotado",
+            "marca como agotado {productoInventario}",
+            "pon {productoInventario} como agotado",
+            "ya no hay {productoInventario}",
+            "se acabó {productoInventario}",
+            "agota {productoInventario} en línea"
           ]
         },
 
