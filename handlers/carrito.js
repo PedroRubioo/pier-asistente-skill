@@ -303,95 +303,6 @@ const VaciarCarritoIntentHandler = {
 };
 
 // =====================================================================
-// CONFIRMAR PEDIDO POR VOZ (checkout con pago al recoger en tienda)
-// Flujo: resumen del carrito -> "¿lo confirmo?" -> sí -> POST /api/pedidos
-// =====================================================================
-const ConfirmarPedidoIntentHandler = {
-  canHandle(h) { return esIntent(h, 'ConfirmarPedidoIntent'); },
-  async handle(h) {
-    const token = obtenerToken(h);
-    if (!token) {
-      return responderVincular(h, 'Para hacer tu pedido primero vincula tu cuenta: genera un código en tu perfil de la web de Pier y dime, vincula mi cuenta con el código.');
-    }
-    try {
-      const data = await fetchPierAuth('/api/carrito', token);
-      const carritoData = data.carrito || data;
-      const items = carritoData.items || [];
-      if (items.length === 0) {
-        return responder(h, 'Tu carrito está vacío, no hay nada que pedir todavía. ¿Te recomiendo algo para empezar?');
-      }
-      const resumen = items.slice(0, 6).map(i => `${i.cantidad || 1} ${i.nombre}${i.tamano ? ' ' + i.tamano : ''}`).join(', ');
-      const total = Number(carritoData.total || items.reduce((s, i) => s + (Number(i.subtotal) || 0), 0)).toFixed(0);
-
-      const attrs = h.attributesManager.getSessionAttributes();
-      attrs.confirmandoPedido = true;
-      h.attributesManager.setSessionAttributes(attrs);
-
-      const itemsApl = items.slice(0, 6).map(i => ({
-        primario: i.nombre || 'Producto',
-        secundario: `Cantidad: ${i.cantidad || 1} (${i.tamano || 'chico'})`,
-        terciario: '$' + Number(i.subtotal || 0).toFixed(0),
-        imagen: i.imagen_url || '',
-      }));
-      return responder(
-        h,
-        `Tu pedido sería: ${resumen}, total ${total} pesos, para recoger en tienda y pagar ahí mismo. ¿Lo confirmo?`,
-        buildImageList(`Confirmar pedido · Total $${total}`, itemsApl, 'Di "sí" para confirmar o "no" para cancelar'),
-        'confirmarPedidoToken'
-      );
-    } catch (e) {
-      if (String(e.message) === 'token_invalido') {
-        await limpiarVinculacion(h);
-        return responderVincular(h, 'Tu sesión expiró. Genera un código nuevo en tu perfil de la web y dime: vincula mi cuenta con el código.');
-      }
-      console.error('ConfirmarPedido error:', e);
-      return responder(h, 'No pude revisar tu carrito en este momento. Intenta de nuevo en un momento.');
-    }
-  },
-};
-
-// Se ejecuta cuando el usuario dice "sí" a la confirmación del pedido
-async function ejecutarCrearPedido(h) {
-  const token = obtenerToken(h);
-  if (!token) {
-    return responderVincular(h, 'Tu sesión expiró. Genera un código nuevo en tu perfil de la web y dime: vincula mi cuenta con el código.');
-  }
-  try {
-    const data = await fetchPierAuth('/api/pedidos', token, {
-      method: 'POST',
-      timeout: 6500,
-      body: JSON.stringify({
-        metodo_pago: 'efectivo',
-        notas: 'Pedido realizado por voz con Alexa',
-      }),
-    });
-    if (data.success && data.pedido) {
-      const numero = data.pedido.numero || `#${data.pedido.id}`;
-      const total = Number(data.pedido.total || 0).toFixed(0);
-      return responder(
-        h,
-        `¡Pedido confirmado! Tu número es ${numero}, total ${total} pesos. Ya está listo: pasa a recogerlo cuando gustes y pagas ahí en tienda. ¡Gracias!`,
-        buildHeadline({
-          subtituloHeader: 'Pedido confirmado',
-          primario: numero,
-          secundario: `Total $${total} MXN · Pagas al recoger en tienda`,
-          hint: 'Ya está listo, pasa a recogerlo cuando gustes',
-        }),
-        'pedidoCreadoToken'
-      );
-    }
-    return responder(h, data.message || 'No pude crear el pedido en este momento.');
-  } catch (e) {
-    if (String(e.message) === 'token_invalido') {
-      await limpiarVinculacion(h);
-      return responderVincular(h, 'Tu sesión expiró. Genera un código nuevo en tu perfil de la web y dime: vincula mi cuenta con el código.');
-    }
-    console.error('ejecutarCrearPedido error:', e);
-    return responder(h, 'No pude crear el pedido en este momento. Tu carrito sigue intacto, intenta en un momento.');
-  }
-}
-
-// =====================================================================
 // QUITAR UN PRODUCTO DEL CARRITO («quita el chocoflán del carrito»)
 // Resuelve el item por nombre contra el carrito real y borra esa fila.
 // =====================================================================
@@ -504,12 +415,10 @@ module.exports = {
   TamanoGrandeIntentHandler,
   ConsultarCarritoIntentHandler,
   VaciarCarritoIntentHandler,
-  ConfirmarPedidoIntentHandler,
   QuitarCarritoIntentHandler,
   PedirDeNuevoIntentHandler,
   manejarEleccionTamano,
   iniciarAgregadoProducto,
   ejecutarVaciado,
-  ejecutarCrearPedido,
   resolverProductoDesdePregunta,
 };

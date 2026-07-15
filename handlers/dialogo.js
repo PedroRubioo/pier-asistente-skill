@@ -11,7 +11,7 @@ const { obtenerCatalogoCompleto, productosEnCache } = require('../lib/api');
 const { responderConIA } = require('../lib/ia');
 const { responder } = require('../lib/respuesta');
 const { buildImageList, buildMultipleChoice } = require('../lib/apl');
-const { iniciarAgregadoProducto, ejecutarVaciado, ejecutarCrearPedido } = require('./carrito');
+const { iniciarAgregadoProducto, ejecutarVaciado } = require('./carrito');
 const { ejecutarCambioEstado, ejecutarAsignacion, ejecutarMarcarAgotado } = require('./negocio');
 
 const TAM_PAGINA = 5;
@@ -112,14 +112,7 @@ const YesIntentHandler = {
   async handle(h) {
     const attrs = h.attributesManager.getSessionAttributes();
 
-    // 0) Confirmación pendiente de CREAR PEDIDO (checkout por voz)
-    if (attrs.confirmandoPedido) {
-      delete attrs.confirmandoPedido;
-      h.attributesManager.setSessionAttributes(attrs);
-      return ejecutarCrearPedido(h);
-    }
-
-    // 0.1) Confirmaciones del personal: estado de pedido, asignación, agotado
+    // 0) Confirmaciones del personal: estado de pedido, asignación, agotado
     if (attrs.confirmandoEstadoPedido) return ejecutarCambioEstado(h);
     if (attrs.confirmandoAsignacion) return ejecutarAsignacion(h);
     if (attrs.confirmandoAgotado) return ejecutarMarcarAgotado(h);
@@ -171,12 +164,6 @@ const NoIntentHandler = {
   canHandle(h) { return esIntent(h, 'AMAZON.NoIntent'); },
   async handle(h) {
     const attrs = h.attributesManager.getSessionAttributes();
-
-    if (attrs.confirmandoPedido) {
-      delete attrs.confirmandoPedido;
-      h.attributesManager.setSessionAttributes(attrs);
-      return responder(h, 'Va, no confirmo nada. Tu carrito se queda tal cual por si te animas después. ¿Algo más?');
-    }
 
     if (attrs.confirmandoEstadoPedido || attrs.confirmandoAsignacion || attrs.confirmandoAgotado) {
       delete attrs.confirmandoEstadoPedido;

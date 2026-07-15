@@ -77,9 +77,7 @@ const HelpIntentHandler = {
   handle(h) {
     const attrs = h.attributesManager.getSessionAttributes();
     let speak;
-    if (attrs.confirmandoPedido) {
-      speak = 'Te pregunté si confirmo tu pedido para recoger en tienda. Dime sí para confirmarlo o no para dejarlo pendiente.';
-    } else if (attrs.confirmandoEstadoPedido) {
+    if (attrs.confirmandoEstadoPedido) {
       speak = `Te pregunté si cambio el pedido ${attrs.confirmandoEstadoPedido.numero} de estado. Dime sí o no.`;
     } else if (attrs.confirmandoAsignacion) {
       speak = `Te pregunté si asigno el pedido ${attrs.confirmandoAsignacion.numero} a ${attrs.confirmandoAsignacion.repartidor_nombre}. Dime sí o no.`;

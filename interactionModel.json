@@ -282,28 +282,6 @@
         },
 
         {
-          "name": "ConfirmarPedidoIntent",
-          "slots": [],
-          "samples": [
-            "confirma mi pedido",
-            "confirmar mi pedido",
-            "confirmar pedido",
-            "haz mi pedido",
-            "haz el pedido",
-            "hacer el pedido",
-            "realiza mi pedido",
-            "finaliza mi pedido",
-            "finalizar pedido",
-            "cierra mi pedido",
-            "termina mi compra",
-            "quiero hacer el pedido",
-            "quiero confirmar mi pedido",
-            "ordena mi pedido",
-            "manda mi pedido"
-          ]
-        },
-
-        {
           "name": "QuitarCarritoIntent",
           "slots": [
             { "name": "producto", "type": "AMAZON.SearchQuery" }

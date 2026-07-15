@@ -68,11 +68,6 @@ const LimpiarEstadoObsoletoInterceptor = {
       delete attrs.confirmandoVaciar;
     }
 
-    const mantienenPedido = ['AMAZON.YesIntent', 'AMAZON.NoIntent', 'AMAZON.HelpIntent', 'ConfirmarPedidoIntent'];
-    if (attrs.confirmandoPedido && !mantienenPedido.includes(nombre)) {
-      delete attrs.confirmandoPedido;
-    }
-
     // Confirmaciones del personal: mismas reglas (solo sí/no/ayuda las mantienen)
     const soloSiNo = ['AMAZON.YesIntent', 'AMAZON.NoIntent', 'AMAZON.HelpIntent'];
     if (attrs.confirmandoEstadoPedido && !soloSiNo.includes(nombre) && nombre !== 'CambiarEstadoPedidoIntent') {
@@ -134,10 +129,9 @@ exports.handler = Alexa.SkillBuilders.custom()
     negocio.ReponerStockIntentHandler,
     negocio.MarcarAgotadoIntentHandler,
     negocio.VentasHoyIntentHandler,
-    // Acciones autenticadas (carrito, pedido por voz, reseñas)
+    // Acciones autenticadas (carrito, reseñas)
     carrito.AgregarCarritoIntentHandler,
     carrito.QuitarCarritoIntentHandler,
-    carrito.ConfirmarPedidoIntentHandler,
     carrito.PedirDeNuevoIntentHandler,
     carrito.TamanoChicoIntentHandler,
     carrito.TamanoGrandeIntentHandler,
