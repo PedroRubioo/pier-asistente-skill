@@ -1240,7 +1240,6 @@
           "name": "TIPO_ESTADO_PEDIDO",
           "values": [
             { "name": { "value": "pendientes", "synonyms": ["pendiente", "sin atender", "nuevos"] } },
-            { "name": { "value": "en preparación", "synonyms": ["en preparacion", "preparándose", "en la cocina", "preparación"] } },
             { "name": { "value": "listos", "synonyms": ["listo", "listos para recoger", "terminados"] } },
             { "name": { "value": "completados", "synonyms": ["completado", "entregados", "finalizados"] } },
             { "name": { "value": "cancelados", "synonyms": ["cancelado"] } }
