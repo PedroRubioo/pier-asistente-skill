@@ -11,7 +11,7 @@
 const Alexa = require('ask-sdk-core');
 const { fetchPier, fetchPierAuth, obtenerCatalogoCompleto } = require('../lib/api');
 const { obtenerToken, limpiarVinculacion } = require('../lib/auth');
-const { normalizar } = require('../lib/texto');
+const { normalizar, mejorProductoPorNombre } = require('../lib/texto');
 const { ahoraEnMexico } = require('../lib/horario');
 const { responder, responderVincular } = require('../lib/respuesta');
 const { buildHeadline, buildImageList } = require('../lib/apl');
@@ -241,6 +241,11 @@ const ESTADOS_ENTREGA_VOZ = {
   'en camino': 'en_camino',
 };
 
+// Plural hablado correcto: "asignadas", pero "en camino" (nunca "en caminos")
+function pluralEntrega(estadoBD) {
+  return estadoBD === 'asignada' ? 'asignadas' : 'en camino';
+}
+
 const EntregasIntentHandler = {
   canHandle(h) { return esIntent(h, 'EntregasIntent'); },
   async handle(h) {
@@ -254,7 +259,7 @@ const EntregasIntentHandler = {
       const entregas = (data.entregas || []).slice(0, 6);
       if (entregas.length === 0) {
         return responder(h, estadoBD
-          ? `No hay entregas ${estadoLegible(estadoBD)}s en este momento.`
+          ? `No hay entregas ${pluralEntrega(estadoBD)} en este momento.`
           : 'No hay entregas registradas por ahora.');
       }
       const habla = entregas.slice(0, 3).map(en =>
@@ -267,7 +272,7 @@ const EntregasIntentHandler = {
       }));
       return responder(
         h,
-        `${entregas.length === 1 ? 'Hay 1 entrega' : `Hay ${entregas.length} entregas`}${estadoBD ? ` ${estadoLegible(estadoBD)}s` : ''}: ${habla}.`,
+        `${entregas.length === 1 ? 'Hay 1 entrega' : `Hay ${entregas.length} entregas`}${estadoBD ? ` ${entregas.length === 1 ? estadoLegible(estadoBD) : pluralEntrega(estadoBD)}` : ''}: ${habla}.`,
         buildImageList('Entregas a domicilio', items, 'El tablero completo está en tu panel'),
         'entregasToken'
       );
@@ -456,10 +461,7 @@ const ReponerStockIntentHandler = {
     }
     try {
       const catalogo = await obtenerCatalogoCompleto();
-      const t = normalizar(dicho).replace(/\b(el|la|los|las|de|del)\b/g, ' ');
-      const producto = catalogo
-        .filter(p => p.nombre && (t.includes(normalizar(p.nombre)) || normalizar(p.nombre).includes(t.trim())))
-        .sort((a, b) => b.nombre.length - a.nombre.length)[0];
+      const producto = mejorProductoPorNombre(dicho, catalogo);
       if (!producto) {
         return responder(h, `No encontré "${dicho}" en el catálogo. ¿De cuál producto repongo stock?`);
       }
@@ -500,10 +502,7 @@ const MarcarAgotadoIntentHandler = {
     const dicho = Alexa.getSlotValue(h.requestEnvelope, 'productoInventario') || '';
     try {
       const catalogo = await obtenerCatalogoCompleto();
-      const t = normalizar(dicho).replace(/\b(el|la|los|las|de|del)\b/g, ' ');
-      const producto = catalogo
-        .filter(p => p.nombre && (t.includes(normalizar(p.nombre)) || normalizar(p.nombre).includes(t.trim())))
-        .sort((a, b) => b.nombre.length - a.nombre.length)[0];
+      const producto = mejorProductoPorNombre(dicho, catalogo);
       if (!producto) {
         return responder(h, `No encontré "${dicho}" en el catálogo. ¿Cuál producto marco como agotado?`);
       }

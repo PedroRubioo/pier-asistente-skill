@@ -531,10 +531,19 @@
           ],
           "samples": [
             "repón {cantidad} unidades de {productoInventario}",
+            "repón {cantidad} unidades del {productoInventario}",
+            "repón {cantidad} unidades de la {productoInventario}",
             "repón {cantidad} de {productoInventario}",
+            "repón {cantidad} del {productoInventario}",
+            "repón {cantidad} {productoInventario}",
+            "reponer {cantidad} unidades de {productoInventario}",
+            "reponer {cantidad} unidades del {productoInventario}",
             "agrega {cantidad} unidades de stock de {productoInventario}",
+            "agrega {cantidad} unidades de stock del {productoInventario}",
             "suma {cantidad} unidades de {productoInventario} al inventario",
-            "mete {cantidad} unidades de {productoInventario} al stock"
+            "suma {cantidad} unidades del {productoInventario} al inventario",
+            "mete {cantidad} unidades de {productoInventario} al stock",
+            "mete {cantidad} unidades del {productoInventario} al stock"
           ]
         },
 
@@ -549,6 +558,9 @@
             "pon {productoInventario} como agotado",
             "ya no hay {productoInventario}",
             "se acabó {productoInventario}",
+            "ya se acabó {productoInventario}",
+            "se nos acabó {productoInventario}",
+            "ya no queda {productoInventario}",
             "agota {productoInventario} en línea"
           ]
         },

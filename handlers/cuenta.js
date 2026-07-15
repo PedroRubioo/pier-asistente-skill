@@ -8,7 +8,7 @@ const { obtenerConfig } = require('../lib/config');
 const { fetchPierAuth, obtenerCatalogoCompleto } = require('../lib/api');
 const { obtenerToken, limpiarVinculacion, ROLES_PERSONAL } = require('../lib/auth');
 const { comandosPersonal, rolLegible } = require('../lib/personal');
-const { normalizar } = require('../lib/texto');
+const { normalizar, mejorProductoPorNombre } = require('../lib/texto');
 const { responderConIA } = require('../lib/ia');
 const { responder, responderVincular } = require('../lib/respuesta');
 const { buildHeadline, buildImageList, buildPanelComandos } = require('../lib/apl');
@@ -385,12 +385,7 @@ const MisResenasIntentHandler = {
 // FAVORITOS POR VOZ: agregar y quitar
 // =====================================================================
 function buscarProductoPorNombre(dicho, catalogo) {
-  const t = normalizar(dicho).replace(/\b(el|la|los|las|un|una|mi|mis)\b/g, ' ');
-  const matches = (catalogo || []).filter(p =>
-    p.nombre && (t.includes(normalizar(p.nombre)) || normalizar(p.nombre).includes(t.trim()))
-  );
-  if (matches.length === 0) return null;
-  return matches.sort((a, b) => b.nombre.length - a.nombre.length)[0];
+  return mejorProductoPorNombre(dicho, catalogo);
 }
 
 const AgregarFavoritoIntentHandler = {
@@ -570,18 +565,21 @@ const PedidosNegocioIntentHandler = {
         );
       }
 
-      // Sin estado: resumen general por estados (calculado aquí, como lo hace la web)
+      // Sin estado: resumen general por estados (calculado aquí, como lo hace
+      // la web). "en_preparacion" es un estado muerto (solo pedidos históricos
+      // de antes de la regla "todo nace listo"): no se menciona.
       const conteo = {};
       pedidos.forEach(p => { conteo[p.estado] = (conteo[p.estado] || 0) + 1; });
-      const partes = ['pendiente', 'en_preparacion', 'listo', 'completado']
+      const ESTADOS_VIGENTES = ['pendiente', 'listo', 'completado', 'cancelado'];
+      const partes = ['pendiente', 'listo', 'completado']
         .filter(e => conteo[e])
         .map(e => `${conteo[e]} ${estadoLegible(e)}`);
       if (partes.length === 0) {
         return responder(h, 'No hay pedidos registrados por ahora. Todo tranquilo.');
       }
-      const items = Object.entries(conteo).map(([e, n]) => ({
+      const items = ESTADOS_VIGENTES.filter(e => conteo[e]).map(e => ({
         primario: estadoLegible(e),
-        secundario: `${n} ${n === 1 ? 'pedido' : 'pedidos'}`,
+        secundario: `${conteo[e]} ${conteo[e] === 1 ? 'pedido' : 'pedidos'}`,
         terciario: '',
       }));
       return responder(
