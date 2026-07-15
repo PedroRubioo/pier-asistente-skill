@@ -21,6 +21,7 @@ const carrito = require('./handlers/carrito');
 const conversacion = require('./handlers/conversacion');
 const dialogo = require('./handlers/dialogo');
 const negocio = require('./handlers/negocio');
+const reportes = require('./handlers/reportes');
 const { AplUserEventHandler } = require('./handlers/aplEventos');
 
 // Al inicio de cada sesión carga la vinculación persistida (código de
@@ -129,6 +130,13 @@ exports.handler = Alexa.SkillBuilders.custom()
     negocio.ReponerStockIntentHandler,
     negocio.MarcarAgotadoIntentHandler,
     negocio.VentasHoyIntentHandler,
+    // Reportes del negocio con jerarquía (gerencia / dirección general)
+    reportes.KpisNegocioIntentHandler,
+    reportes.ProductosTopIntentHandler,
+    reportes.VentasSemanaIntentHandler,
+    reportes.EquipoIntentHandler,
+    reportes.ResumenMesIntentHandler,
+    reportes.AuditoriaIntentHandler,
     // Acciones autenticadas (carrito, reseñas)
     carrito.AgregarCarritoIntentHandler,
     carrito.QuitarCarritoIntentHandler,

@@ -554,6 +554,96 @@
         },
 
         {
+          "name": "KpisNegocioIntent",
+          "slots": [],
+          "samples": [
+            "cuáles son los números del negocio",
+            "dame los números del negocio",
+            "cuánto hemos vendido en total",
+            "cuánto ha vendido el negocio",
+            "kpis del negocio",
+            "dame los kpis",
+            "números históricos",
+            "cómo va el negocio en total",
+            "estadísticas del negocio"
+          ]
+        },
+
+        {
+          "name": "ProductosTopIntent",
+          "slots": [],
+          "samples": [
+            "cuáles son los productos más vendidos",
+            "qué es lo que más se vende",
+            "qué producto se vende más",
+            "ranking de productos",
+            "dame el ranking de ventas",
+            "top de productos",
+            "cuál es el producto estrella",
+            "qué es lo más vendido de la tienda"
+          ]
+        },
+
+        {
+          "name": "VentasSemanaIntent",
+          "slots": [],
+          "samples": [
+            "cómo van las ventas de la semana",
+            "cuánto vendimos esta semana",
+            "ventas de la semana",
+            "ventas semanales",
+            "cómo nos fue esta semana",
+            "resumen de la semana",
+            "cómo va la semana"
+          ]
+        },
+
+        {
+          "name": "EquipoIntent",
+          "slots": [],
+          "samples": [
+            "cuántos empleados tenemos",
+            "cuántos empleados hay",
+            "cuántos clientes tenemos",
+            "cuántos clientes hay registrados",
+            "cuántos repartidores tenemos",
+            "cómo está el equipo",
+            "cuánta gente trabaja aquí",
+            "cuántos usuarios tiene la plataforma"
+          ]
+        },
+
+        {
+          "name": "ResumenMesIntent",
+          "slots": [],
+          "samples": [
+            "dame el resumen del mes",
+            "cómo va el mes",
+            "resumen ejecutivo del mes",
+            "cómo vamos este mes",
+            "reporte del mes",
+            "cuánto hemos vendido este mes",
+            "cómo cerró el mes pasado",
+            "dame el reporte ejecutivo"
+          ]
+        },
+
+        {
+          "name": "AuditoriaIntent",
+          "slots": [],
+          "samples": [
+            "qué movimientos hubo en el sistema",
+            "qué movimientos hubo hoy",
+            "dame la auditoría",
+            "auditoría del sistema",
+            "bitácora del sistema",
+            "qué ha pasado en el sistema",
+            "quién ha hecho cambios",
+            "revisión de auditoría"
+          ]
+        },
+
+        {
           "name": "VentasHoyIntent",
           "slots": [],
           "samples": [
