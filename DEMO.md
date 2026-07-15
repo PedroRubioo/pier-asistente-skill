@@ -47,6 +47,7 @@ Cualquier persona puede consultar la repostería sin identificarse.
 | 4 | **Tocar un producto** | Ficha del producto con imagen, precios y el botón “Agregar al pedido” |
 | 5 | «qué productos tienen» | Menciona productos reales y dice **cuántos hay en total**, ofreciendo continuar |
 | 6 | «sí» → después «dame un resumen» | Lee la siguiente tanda y luego condensa lo restante: cantidad, categorías y rango de precios |
+| 6b | «qué me recomiendas» → «continúa» | Cada respuesta muestra en pantalla los productos que menciona, con sus fotografías |
 | 7 | «hacen envíos a la colonia [una real]» | Tarifa real de la zona; con una colonia inexistente, lo dice con honestidad y ofrece recoger en tienda |
 | 8 | ⭐ «tienen tiramisú» | *“Ese no lo manejamos”* y sugiere lo más parecido — la IA nunca inventa productos ni precios |
 | 9 | «a qué hora abren» | Responde con el estado abierto o cerrado calculado a la hora actual |
@@ -178,7 +179,8 @@ La dirección hereda todo lo anterior y accede a la información más sensible.
 ## Características presentes en toda la skill
 
 - **Inteligencia artificial con datos reales.** La IA conoce el catálogo completo con precios y disponibilidad al momento, mantiene el hilo de la conversación (entiende «ese», «agrégalo», «el grande»), responde dudas generales de repostería y es honesta: lo que no existe en la base de datos, “no lo manejamos”. Además conoce sus propias funciones y le indica al usuario la frase exacta según su rol.
-- **Experiencia visual en el 100 % de las respuestas.** Seis plantillas del Alexa Design System más una pantalla de respaldo universal garantizan que ningún turno quede sin interfaz. Todas comparten la fotografía real de la sucursal como fondo, el logotipo, la tipografía serif y la paleta del sitio (verde oliva, dorado y arena), y se adaptan a pantallas rectangulares y redondas.
+- **Experiencia visual en el 100 % de las respuestas.** Seis plantillas del Alexa Design System más una pantalla de respaldo universal garantizan que ningún turno quede sin interfaz. Todas comparten la fotografía real de la sucursal como fondo, el logotipo, la tipografía serif y la paleta del sitio (verde oliva, dorado y arena), con **encabezado de marca y pie de página presentes en cada pantalla**, y se adaptan a pantallas rectangulares y redondas.
+- **Lo que se dice, se ve.** Cuando la inteligencia artificial menciona productos en la conversación libre (una recomendación, un «continúa», un «sí»), esos productos aparecen automáticamente en pantalla: como lista con fotografías si son varios, o como ficha con el botón "Agregar al pedido" si es uno.
 - **Interacción táctil real.** Tocar una categoría, un producto, un botón de tamaño, “Agregar al pedido” o “Ver horario” ejecuta la acción, no solo la muestra.
 - **Compatibilidad con bocinas sin pantalla.** Todo funciona por voz pura; la skill detecta el dispositivo y nunca pide “tocar” en un Echo Dot.
 - **Respuestas largas administradas.** El usuario decide: continuar, pedir un resumen o detener la lectura.
@@ -194,7 +196,7 @@ La dirección hereda todo lo anterior y accede a la información más sensible.
 |---|---|
 | Diseño conversacional (VUI) | Memoria del contexto, confirmaciones, ayuda contextual y respuestas que nunca se repiten igual |
 | Integración con el sitio web | Carrito sincronizado (cliente, paso 10), vinculación por código y notificaciones cruzadas |
-| APL y experiencia multimodal | Seis plantillas más respaldo universal, interacción táctil y adaptación con y sin pantalla |
+| APL y experiencia multimodal | Seis plantillas más respaldo universal, todo producto mencionado se ve en pantalla, interacción táctil y adaptación con y sin pantalla |
 | Diseño visual e identidad | Logotipo y fotografía reales de la sucursal, paleta y tipografía del sitio |
 | Funcionalidad e información dinámica | Totales y precios en vivo, y lectura por partes: continuar, resumir o detener |
 | Manejo de errores y seguridad | Jerarquía de roles, códigos de un solo uso, límites de intentos y sesiones con revocación |
