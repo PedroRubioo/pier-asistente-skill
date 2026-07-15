@@ -4,37 +4,14 @@
 // =====================================================================
 const Alexa = require('ask-sdk-core');
 const { PIER_WEB } = require('../lib/config');
-const { productosEnCache } = require('../lib/api');
 const { obtenerToken } = require('../lib/auth');
-const { responderConIA } = require('../lib/ia');
+const { responderConIA, aplParaContexto } = require('../lib/ia');
 const { responder } = require('../lib/respuesta');
 const { aSsml } = require('../lib/ssml');
-const { buildDetalleProducto } = require('../lib/apl');
 
 function esIntent(h, nombre) {
   return Alexa.getRequestType(h.requestEnvelope) === 'IntentRequest'
     && Alexa.getIntentName(h.requestEnvelope) === nombre;
-}
-
-// Si hay un producto activo en la conversación, mostramos su ficha
-// (Image Right Detail) con el botón táctil "Agregar al pedido"
-function aplParaProductoActivo(h) {
-  const attrs = h.attributesManager.getSessionAttributes();
-  const pa = attrs.productoActivo;
-  if (!pa || !pa.id) return null;
-  const full = productosEnCache().find(x => x.id === pa.id);
-  return {
-    doc: buildDetalleProducto({
-      id: pa.id,
-      nombre: pa.nombre,
-      descripcion: full?.descripcion || '',
-      imagen_url: full?.imagen_url || '',
-      precio_chico: pa.precio_chico,
-      precio_grande: pa.precio_grande,
-      rating: full?.rating,
-    }),
-    token: 'productoToken',
-  };
 }
 
 const PreguntaPierIntentHandler = {
@@ -66,7 +43,8 @@ const PreguntaPierIntentHandler = {
     let respuesta;
     try { respuesta = await responderConIA(h, instruccion, pregunta); }
     catch (e) { console.error(e); respuesta = `No pude procesar tu pregunta. Visita ${PIER_WEB}.`; }
-    const apl = aplParaProductoActivo(h);
+    // Los productos mencionados por la IA también se ven en pantalla
+    const apl = await aplParaContexto(h);
     return responder(h, respuesta, apl?.doc, apl?.token);
   },
 };
@@ -132,7 +110,8 @@ const FallbackIntentHandler = {
     let respuesta;
     try { respuesta = await responderConIA(h, instruccion, 'continúa la conversación de forma natural'); }
     catch (e) { console.error(e); respuesta = '¿Me lo repites por favor? No alcancé a captarlo bien.'; }
-    return responder(h, respuesta);
+    const apl = await aplParaContexto(h);
+    return responder(h, respuesta, apl?.doc, apl?.token);
   },
 };
 
@@ -163,5 +142,4 @@ module.exports = {
   FallbackIntentHandler,
   SessionEndedRequestHandler,
   ErrorHandler,
-  aplParaProductoActivo,
 };

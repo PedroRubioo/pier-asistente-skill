@@ -8,7 +8,7 @@
 // =====================================================================
 const Alexa = require('ask-sdk-core');
 const { obtenerCatalogoCompleto, productosEnCache } = require('../lib/api');
-const { responderConIA } = require('../lib/ia');
+const { responderConIA, aplParaContexto } = require('../lib/ia');
 const { responder } = require('../lib/respuesta');
 const { buildImageList, buildMultipleChoice } = require('../lib/apl');
 const { iniciarAgregadoProducto, ejecutarVaciado } = require('./carrito');
@@ -156,7 +156,8 @@ const YesIntentHandler = {
     try {
       respuesta = await responderConIA(h, 'El usuario respondió "sí" a lo último que le preguntaste (revisa tu último mensaje del historial). Cumple lo que ofreciste o avanza la conversación de forma natural. Breve.', 'sí');
     } catch (e) { console.error(e); respuesta = 'Va. ¿En qué más te ayudo?'; }
-    return responder(h, respuesta);
+    const apl = await aplParaContexto(h);
+    return responder(h, respuesta, apl?.doc, apl?.token);
   },
 };
 
@@ -195,7 +196,8 @@ const NoIntentHandler = {
     try {
       respuesta = await responderConIA(h, 'El usuario respondió "no" a lo último que le preguntaste. Acepta con naturalidad y ofrece otra alternativa o pregunta abierta. Breve.', 'no');
     } catch (e) { console.error(e); respuesta = 'Está bien. ¿En qué más te ayudo?'; }
-    return responder(h, respuesta);
+    const apl = await aplParaContexto(h);
+    return responder(h, respuesta, apl?.doc, apl?.token);
   },
 };
 
@@ -208,7 +210,8 @@ const NextIntentHandler = {
     try {
       respuesta = await responderConIA(h, 'El usuario pidió "más" o "siguiente". Ofrécele más opciones del CATÁLOGO que no hayas mencionado aún, con precios. Breve.', 'dame más opciones');
     } catch (e) { console.error(e); respuesta = '¿Más opciones? Pregúntame por alguna categoría, como cheesecakes o frappes.'; }
-    return responder(h, respuesta);
+    const apl = await aplParaContexto(h);
+    return responder(h, respuesta, apl?.doc, apl?.token);
   },
 };
 
@@ -221,7 +224,8 @@ const ResumirIntentHandler = {
     try {
       respuesta = await responderConIA(h, 'El usuario pidió un resumen. Resume en 2 oraciones qué tipos de productos hay en el CATÁLOGO y el rango de precios, sin listar todo.', 'dame un resumen del catálogo');
     } catch (e) { console.error(e); respuesta = 'Tenemos pasteles, cheesecakes, pays, galletas y bebidas, desde 70 hasta 590 pesos. ¿Qué se te antoja?'; }
-    return responder(h, respuesta);
+    const apl = await aplParaContexto(h);
+    return responder(h, respuesta, apl?.doc, apl?.token);
   },
 };
 
