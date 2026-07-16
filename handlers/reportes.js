@@ -155,7 +155,7 @@ const VentasSemanaIntentHandler = {
           : ` Eso es ${Math.abs(cambio)} por ciento abajo de la semana anterior.`;
       return responder(
         h,
-        `En los últimos siete días van ${semana.length} pedidos por ${pesos(totalSemana)} pesos.${cambioTxt}`,
+        `En los últimos siete días van ${semana.length} ${semana.length === 1 ? 'pedido' : 'pedidos'} por ${pesos(totalSemana)} pesos.${cambioTxt}`,
         buildHeadline({
           subtituloHeader: 'Ventas de la semana',
           primario: `$${pesos(totalSemana)} MXN`,
@@ -230,11 +230,11 @@ const ResumenMesIntentHandler = {
       const totalAnterior = suma(anterior);
       const ticket = actual.length > 0 ? Math.round(totalActual / actual.length) : 0;
       const comparacion = totalAnterior > 0
-        ? ` El mes pasado cerró en ${pesos(totalAnterior)} pesos con ${anterior.length} pedidos.`
+        ? ` El mes pasado cerró en ${pesos(totalAnterior)} pesos con ${anterior.length} ${anterior.length === 1 ? 'pedido' : 'pedidos'}.`
         : '';
       return responder(
         h,
-        `Resumen del mes: van ${pesos(totalActual)} pesos en ${actual.length} pedidos, con ticket promedio de ${pesos(ticket)} pesos.${comparacion}`,
+        `Resumen del mes: van ${pesos(totalActual)} pesos en ${actual.length} ${actual.length === 1 ? 'pedido' : 'pedidos'}, con ticket promedio de ${pesos(ticket)} pesos.${comparacion}`,
         buildHeadline({
           subtituloHeader: 'Resumen ejecutivo del mes',
           primario: `$${pesos(totalActual)} MXN`,
