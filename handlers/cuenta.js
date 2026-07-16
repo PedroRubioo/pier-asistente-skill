@@ -490,7 +490,15 @@ const NotificacionesIntentHandler = {
     }
     try {
       const data = await fetchPierAuth('/api/notificaciones', token);
-      const noLeidas = (data.notificaciones || []).filter(n => !n.leida);
+      // Duplicados exactos (mismo título y mensaje) se leen UNA sola vez
+      const vistas = new Set();
+      const noLeidas = (data.notificaciones || []).filter(n => {
+        if (n.leida) return false;
+        const clave = `${n.titulo}|${n.mensaje}`;
+        if (vistas.has(clave)) return false;
+        vistas.add(clave);
+        return true;
+      });
       if (noLeidas.length === 0) {
         return responder(h, 'Estás al día, no tienes notificaciones nuevas. ¿Te ayudo con otra cosa?');
       }
@@ -553,13 +561,11 @@ const PedidosNegocioIntentHandler = {
     const estadoBD = ESTADOS_VOZ[normalizar(resuelto)] || ESTADOS_VOZ[resuelto] || null;
 
     try {
-      const query = estadoBD ? `/api/pedidos?estado=${encodeURIComponent(estadoBD)}&limite=100` : '/api/pedidos?limite=100';
-      const data = await fetchPierAuth(query, token);
-      const pedidos = data.pedidos || [];
-
       if (estadoBD) {
+        const data = await fetchPierAuth(`/api/pedidos?estado=${encodeURIComponent(estadoBD)}&limite=100`, token);
+        const pedidos = data.pedidos || [];
         if (pedidos.length === 0) {
-          return responder(h, `No hay pedidos ${estadoLegible(estadoBD)} en este momento. Todo al día.`);
+          return responder(h, `No hay pedidos ${estadoLegible(estadoBD)}s en este momento. Todo al día.`);
         }
         const top = pedidos.slice(0, 3).map(p =>
           `${p.numero}, de ${p.cliente_nombre || 'cliente'}, ${Number(p.total || 0).toFixed(0)} pesos`
@@ -577,17 +583,24 @@ const PedidosNegocioIntentHandler = {
         );
       }
 
-      // Sin estado: resumen general por estados (calculado aquí, como lo hace
-      // la web). "en_preparacion" es un estado muerto (solo pedidos históricos
-      // de antes de la regla "todo nace listo"): no se menciona.
+      // Sin estado: resumen general con el conteo REAL de toda la base
+      // (la lista está limitada a 100 pedidos y daría números incompletos).
+      // Respaldo: si el endpoint de conteo aún no existe, cuenta la ventana.
+      // "en_preparacion" es un estado muerto (solo históricos): no se menciona.
       const conteo = {};
-      pedidos.forEach(p => { conteo[p.estado] = (conteo[p.estado] || 0) + 1; });
+      const dataConteo = await fetchPierAuth('/api/pedidos/conteo-estados', token).catch(() => null);
+      if (dataConteo && dataConteo.conteos) {
+        dataConteo.conteos.forEach(c => { conteo[c.estado] = Number(c.total) || 0; });
+      } else {
+        const data = await fetchPierAuth('/api/pedidos?limite=100', token);
+        (data.pedidos || []).forEach(p => { conteo[p.estado] = (conteo[p.estado] || 0) + 1; });
+      }
       const ESTADOS_VIGENTES = ['pendiente', 'listo', 'completado', 'cancelado'];
       const partes = ['pendiente', 'listo', 'completado']
         .filter(e => conteo[e])
-        .map(e => `${conteo[e]} ${estadoLegible(e)}`);
+        .map(e => `${conteo[e]} ${estadoLegible(e)}${conteo[e] === 1 ? '' : 's'}`);
       if (partes.length === 0) {
-        return responder(h, 'No hay pedidos registrados por ahora. Todo tranquilo.');
+        return responder(h, 'No hay pedidos activos por ahora. Todo tranquilo.');
       }
       const items = ESTADOS_VIGENTES.filter(e => conteo[e]).map(e => ({
         primario: estadoLegible(e),

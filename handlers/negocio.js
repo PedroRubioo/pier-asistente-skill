@@ -91,6 +91,32 @@ const CambiarEstadoPedidoIntentHandler = {
       if (!pedido) {
         return responder(h, `No encontré ningún pedido que termine en ${numero}. Revisa el número en tu panel.`);
       }
+
+      // Coherencia de la máquina de estados por voz:
+      // mismo estado -> nada que hacer; finales -> no se tocan;
+      // con repartidor -> lo lleva el flujo de entregas, no esta vía.
+      if (pedido.estado === estadoBD) {
+        return responder(h, `El pedido ${pedido.numero} ya está ${estadoLegible(estadoBD)}, no hay nada que cambiar. ¿Algo más?`);
+      }
+      if (['completado', 'cancelado', 'entregado'].includes(pedido.estado)) {
+        return responder(h, `El pedido ${pedido.numero} ya está ${estadoLegible(pedido.estado)} y ese es un estado final: ya no se puede cambiar. ¿Algo más?`);
+      }
+      if (['asignado', 'en_camino'].includes(pedido.estado)) {
+        return responder(h, `El pedido ${pedido.numero} ya está ${estadoLegible(pedido.estado)} con repartidor: su estado lo lleva el flujo de entregas. Si necesitas corregirlo, hazlo desde el panel web.`);
+      }
+      const TRANSICIONES = {
+        pendiente: ['listo', 'cancelado'],
+        en_preparacion: ['listo', 'completado', 'cancelado'],
+        listo: ['completado', 'cancelado'],
+        entrega_fallida: ['cancelado'],
+      };
+      const permitidos = TRANSICIONES[pedido.estado] || [];
+      if (!permitidos.includes(estadoBD)) {
+        return responder(h, permitidos.length
+          ? `Un pedido ${estadoLegible(pedido.estado)} solo puede pasar a ${permitidos.map(estadoLegible).join(' o ')}. ¿Cuál hacemos?`
+          : `Ese cambio no está disponible por voz; hazlo desde el panel web.`);
+      }
+
       const attrs = h.attributesManager.getSessionAttributes();
       attrs.confirmandoEstadoPedido = { id: pedido.id, numero: pedido.numero, estado: estadoBD };
       h.attributesManager.setSessionAttributes(attrs);
@@ -300,13 +326,14 @@ const RepartidoresIntentHandler = {
         return responder(h, 'No hay repartidores registrados todavía.');
       }
       const disponibles = reps.filter(r => r.disponible);
+      const cargaTxt = (n) => `${n} ${Number(n) === 1 ? 'entrega activa' : 'entregas activas'}`;
       const habla = disponibles.length === 0
         ? 'Ningún repartidor está disponible ahorita.'
-        : `Disponibles: ${disponibles.map(r => `${r.nombre}${Number(r.entregas_activas) > 0 ? ` con ${r.entregas_activas} entregas activas` : ''}`).join(', ')}.`;
+        : `Disponibles: ${disponibles.map(r => `${r.nombre}${Number(r.entregas_activas) > 0 ? ` con ${cargaTxt(r.entregas_activas)}` : ''}`).join(', ')}.`;
       const items = reps.map(r => ({
         primario: `${r.nombre} ${r.apellido || ''}`.trim(),
         secundario: r.disponible ? 'Disponible' : 'No disponible',
-        terciario: `${r.entregas_activas || 0} entregas activas`,
+        terciario: cargaTxt(r.entregas_activas || 0),
       }));
       return responder(h, habla, buildImageList('Repartidores', items, 'Di: "asigna el pedido X a [nombre]"'), 'repartidoresToken');
     } catch (e) {
