@@ -6,6 +6,7 @@ const Alexa = require('ask-sdk-core');
 const { PIER_WEB } = require('../lib/config');
 const { fetchPierAuth, obtenerCatalogoCompleto } = require('../lib/api');
 const { obtenerToken, limpiarVinculacion } = require('../lib/auth');
+const { rechazoSiEsPersonal } = require('../lib/personal');
 const { normalizar, cantidadDesdeTexto } = require('../lib/texto');
 const { responderConIA } = require('../lib/ia');
 const { responder, responderVincular } = require('../lib/respuesta');
@@ -119,6 +120,8 @@ function preguntarTamano(h, producto, cantidad = 1) {
 }
 
 async function manejarEleccionTamano(h, tamano) {
+  const rechazo = rechazoSiEsPersonal(h);
+  if (rechazo) return rechazo;
   const attrs = h.attributesManager.getSessionAttributes();
   const pending = attrs.pendingCarrito;
 
@@ -162,6 +165,8 @@ async function manejarEleccionTamano(h, tamano) {
 
 // Flujo compartido con los eventos táctiles (botón "Agregar al pedido")
 async function iniciarAgregadoProducto(h, producto) {
+  const rechazo = rechazoSiEsPersonal(h);
+  if (rechazo) return rechazo;
   const token = obtenerToken(h);
   if (!token) {
     return responderVincular(h, 'Para agregar al carrito primero vincula tu cuenta: genera un código en tu perfil de la web de Pier y dime, vincula mi cuenta con el código. Si eres empleado, identifícate con tu código y pin.');
@@ -176,6 +181,8 @@ async function iniciarAgregadoProducto(h, producto) {
 const AgregarCarritoIntentHandler = {
   canHandle(h) { return esIntent(h, 'AgregarCarritoIntent'); },
   async handle(h) {
+    const rechazo = rechazoSiEsPersonal(h);
+    if (rechazo) return rechazo;
     const token = obtenerToken(h);
     if (!token) {
       return responderVincular(h, 'Para agregar al carrito primero vincula tu cuenta: genera un código en tu perfil de la web de Pier y dime, vincula mi cuenta con el código. Si eres empleado, identifícate con tu código y pin.');
@@ -224,6 +231,8 @@ const TamanoGrandeIntentHandler = {
 const ConsultarCarritoIntentHandler = {
   canHandle(h) { return esIntent(h, 'ConsultarCarritoIntent'); },
   async handle(h) {
+    const rechazo = rechazoSiEsPersonal(h);
+    if (rechazo) return rechazo;
     const token = obtenerToken(h);
     if (!token) {
       return responderVincular(h, 'Para ver tu carrito primero vincula tu cuenta: genera un código en tu perfil de la web de Pier y dime, vincula mi cuenta con el código.');
@@ -290,6 +299,8 @@ async function ejecutarVaciado(h) {
 const VaciarCarritoIntentHandler = {
   canHandle(h) { return esIntent(h, 'VaciarCarritoIntent'); },
   handle(h) {
+    const rechazo = rechazoSiEsPersonal(h);
+    if (rechazo) return rechazo;
     const token = obtenerToken(h);
     if (!token) {
       return responderVincular(h, 'Para vaciar tu carrito primero vincula tu cuenta: genera un código en tu perfil de la web de Pier y dime, vincula mi cuenta con el código.');
@@ -309,6 +320,8 @@ const VaciarCarritoIntentHandler = {
 const QuitarCarritoIntentHandler = {
   canHandle(h) { return esIntent(h, 'QuitarCarritoIntent'); },
   async handle(h) {
+    const rechazo = rechazoSiEsPersonal(h);
+    if (rechazo) return rechazo;
     const token = obtenerToken(h);
     if (!token) {
       return responderVincular(h, 'Para modificar tu carrito primero vincula tu cuenta: genera un código en tu perfil de la web de Pier y dime, vincula mi cuenta con el código.');
@@ -367,6 +380,8 @@ const QuitarCarritoIntentHandler = {
 const PedirDeNuevoIntentHandler = {
   canHandle(h) { return esIntent(h, 'PedirDeNuevoIntent'); },
   async handle(h) {
+    const rechazo = rechazoSiEsPersonal(h);
+    if (rechazo) return rechazo;
     const token = obtenerToken(h);
     if (!token) {
       return responderVincular(h, 'Para ver tus compras anteriores primero vincula tu cuenta: genera un código en tu perfil de la web de Pier y dime, vincula mi cuenta con el código.');

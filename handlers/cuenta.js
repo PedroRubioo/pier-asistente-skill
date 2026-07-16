@@ -7,7 +7,7 @@ const fetch = require('node-fetch');
 const { obtenerConfig } = require('../lib/config');
 const { fetchPierAuth, obtenerCatalogoCompleto } = require('../lib/api');
 const { obtenerToken, limpiarVinculacion, ROLES_PERSONAL } = require('../lib/auth');
-const { comandosPersonal, rolLegible } = require('../lib/personal');
+const { comandosPersonal, rolLegible, rechazoSiEsPersonal } = require('../lib/personal');
 const { normalizar, mejorProductoPorNombre } = require('../lib/texto');
 const { responderConIA } = require('../lib/ia');
 const { responder, responderVincular } = require('../lib/respuesta');
@@ -195,6 +195,8 @@ const LogoutEmpleadoIntentHandler = {
 const MisPedidosIntentHandler = {
   canHandle(h) { return esIntent(h, 'MisPedidosIntent'); },
   async handle(h) {
+    const rechazo = rechazoSiEsPersonal(h);
+    if (rechazo) return rechazo;
     const token = obtenerToken(h);
     if (!token) {
       return responderVincular(h, 'Para ver tus pedidos primero vincula tu cuenta: genera un código en tu perfil de la web de Pier y dime, vincula mi cuenta con el código. Si eres empleado, identifícate con tu código y pin.');
@@ -248,6 +250,8 @@ const MisPedidosIntentHandler = {
 const EstadoUltimoPedidoIntentHandler = {
   canHandle(h) { return esIntent(h, 'EstadoUltimoPedidoIntent'); },
   async handle(h) {
+    const rechazo = rechazoSiEsPersonal(h);
+    if (rechazo) return rechazo;
     const token = obtenerToken(h);
     if (!token) {
       return responderVincular(h, 'Para ver el estado de tu pedido primero vincula tu cuenta: genera un código en tu perfil de la web de Pier y dime, vincula mi cuenta con el código.');
@@ -283,6 +287,8 @@ const EstadoUltimoPedidoIntentHandler = {
 const MisFavoritosIntentHandler = {
   canHandle(h) { return esIntent(h, 'MisFavoritosIntent'); },
   async handle(h) {
+    const rechazo = rechazoSiEsPersonal(h);
+    if (rechazo) return rechazo;
     const token = obtenerToken(h);
     if (!token) {
       return responderVincular(h, 'Para ver tus favoritos primero vincula tu cuenta: genera un código en tu perfil de la web de Pier y dime, vincula mi cuenta con el código.');
@@ -357,6 +363,8 @@ const MiPerfilIntentHandler = {
 const MisResenasIntentHandler = {
   canHandle(h) { return esIntent(h, 'MisResenasIntent'); },
   async handle(h) {
+    const rechazo = rechazoSiEsPersonal(h);
+    if (rechazo) return rechazo;
     const token = obtenerToken(h);
     if (!token) {
       return responderVincular(h, 'Para ver tus reseñas primero vincula tu cuenta: genera un código en tu perfil de la web de Pier y dime, vincula mi cuenta con el código.');
@@ -391,6 +399,8 @@ function buscarProductoPorNombre(dicho, catalogo) {
 const AgregarFavoritoIntentHandler = {
   canHandle(h) { return esIntent(h, 'AgregarFavoritoIntent'); },
   async handle(h) {
+    const rechazo = rechazoSiEsPersonal(h);
+    if (rechazo) return rechazo;
     const token = obtenerToken(h);
     if (!token) {
       return responderVincular(h, 'Para guardar favoritos primero vincula tu cuenta: genera un código en tu perfil de la web de Pier y dime, vincula mi cuenta con el código.');
@@ -430,6 +440,8 @@ const AgregarFavoritoIntentHandler = {
 const QuitarFavoritoIntentHandler = {
   canHandle(h) { return esIntent(h, 'QuitarFavoritoIntent'); },
   async handle(h) {
+    const rechazo = rechazoSiEsPersonal(h);
+    if (rechazo) return rechazo;
     const token = obtenerToken(h);
     if (!token) {
       return responderVincular(h, 'Para modificar tus favoritos primero vincula tu cuenta: genera un código en tu perfil de la web de Pier y dime, vincula mi cuenta con el código.');

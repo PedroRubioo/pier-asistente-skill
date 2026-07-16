@@ -95,7 +95,7 @@ El cliente conserva todo lo anterior y además administra su cuenta y su carrito
 
 ## 👔 Empleado — operación del mostrador
 
-El empleado conserva todo lo del cliente y suma la operación diaria del negocio. La experiencia completa cambia con el rol: al vincular recibe su **panel de comandos** en pantalla, las fichas de producto se vuelven informativas (muestran el stock en línea, sin botón de compra) y la IA le habla como colega de trabajo, sin tono de venta.
+Cada rol tiene sus propias funciones: el personal **no compra, opera**. Las funciones de cliente (carrito, favoritos, historial de compras) no existen en cuentas de personal — si las pide, la skill lo explica con amabilidad. A cambio, la experiencia completa se vuelve de trabajo: al vincular recibe su **panel de comandos** en pantalla, las fichas de producto son informativas (muestran el stock en línea, sin botón de compra) y la IA le habla como colega, sin tono de venta. Las consultas públicas (catálogo, precios, promociones, horario) siguen disponibles para todos.
 
 | Capacidad | Frase de ejemplo |
 |---|---|
@@ -129,6 +129,7 @@ El empleado conserva todo lo del cliente y suma la operación diaria del negocio
 | 9 | «se acabó el chocoflán» → «no» | Pide confirmación y respeta la negativa: nada cambia |
 | 10 | «qué repartidores están disponibles» | Lista real con la carga de cada repartidor |
 | 11 | ⭐ «cuáles son los números del negocio» | *“Esa información es solo de gerencia y dirección”* — la jerarquía de roles, audible |
+| 12 | ⭐ «agrega un chocoflán al carrito» | *“Esa función es de las cuentas de cliente”* — la separación de funciones aplica en ambas direcciones |
 
 ---
 
@@ -182,7 +183,7 @@ La dirección hereda todo lo anterior y accede a la información más sensible.
 - **Inteligencia artificial con datos reales.** La IA conoce el catálogo completo con precios y disponibilidad al momento, mantiene el hilo de la conversación (entiende «ese», «agrégalo», «el grande»), responde dudas generales de repostería y es honesta: lo que no existe en la base de datos, “no lo manejamos”. Además conoce sus propias funciones y le indica al usuario la frase exacta según su rol.
 - **Experiencia visual en el 100 % de las respuestas.** Seis plantillas del Alexa Design System más una pantalla de respaldo universal garantizan que ningún turno quede sin interfaz. Todas comparten la fotografía real de la sucursal como fondo, el logotipo, la tipografía serif y la paleta del sitio (verde oliva, dorado y arena), con **encabezado de marca y pie de página presentes en cada pantalla**, y se adaptan a pantallas rectangulares y redondas.
 - **Lo que se dice, se ve.** Cuando la inteligencia artificial menciona productos en la conversación libre (una recomendación, un «continúa», un «sí»), esos productos aparecen automáticamente en pantalla: como lista con fotografías si son varios, o como ficha si es uno — con el botón “Agregar al pedido” para el cliente, o con el stock en línea para el personal.
-- **La experiencia se adapta al rol.** El personal no ve la skill de cliente: su bienvenida es de trabajo, con un panel de comandos acorde a su jerarquía (operación para el empleado, más reportes para gerencia y dirección); sus fichas de producto son informativas, sin botones de compra; y la IA le habla como compañera de equipo — nunca le vende, y si le preguntan una cifra operativa que no tiene, jamás la inventa: indica la frase exacta para consultar el dato real.
+- **La experiencia se adapta al rol.** Cada rol tiene sus funciones: las de compra (carrito, favoritos, historial) son exclusivas de las cuentas de cliente y el personal recibe un rechazo amable si las pide, igual que un empleado al pedir reportes de gerencia. La sesión de personal es de trabajo: bienvenida con panel de comandos acorde a su jerarquía, fichas de producto informativas sin botones de compra, y una IA que habla como compañera de equipo — nunca vende, y si le preguntan una cifra operativa que no tiene, jamás la inventa: indica la frase exacta para consultar el dato real.
 - **Interacción táctil real.** Tocar una categoría, un producto, un botón de tamaño, “Agregar al pedido” o “Ver horario” ejecuta la acción, no solo la muestra.
 - **Compatibilidad con bocinas sin pantalla.** Todo funciona por voz pura; la skill detecta el dispositivo y nunca pide “tocar” en un Echo Dot.
 - **Respuestas largas administradas.** El usuario decide: continuar, pedir un resumen o detener la lectura.
