@@ -1,0 +1,13 @@
+{
+  "_nota": "Respaldo de la configuración de Account Linking desactivada el 2026-07-18 para la certificación (el flujo OAuth no funcionaba de forma confiable y es la causa #1 de rechazo). Para restaurarla: ask smapi update-account-linking-info --skill-id amzn1.ask.skill.5b21e96e-1dd8-4fda-a3e7-f1b830407734 --stage development --account-linking-request file:account-linking.respaldo.json (quitar este campo _nota y envolver en accountLinkingRequest). El client_secret vive en el backend (variable de entorno), no aquí.",
+  "accountLinkingRequest": {
+    "type": "AUTH_CODE",
+    "accessTokenScheme": "HTTP_BASIC",
+    "authorizationUrl": "https://pier-reposteria-backend.onrender.com/api/oauth/authorize",
+    "accessTokenUrl": "https://pier-reposteria-backend.onrender.com/api/oauth/token",
+    "clientId": "alexa-pier",
+    "defaultTokenExpirationInSeconds": 604800,
+    "domains": ["pier-reposteria-backend.onrender.com", "accounts.google.com"],
+    "skipOnEnablement": true
+  }
+}
