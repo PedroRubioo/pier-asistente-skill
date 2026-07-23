@@ -26,9 +26,9 @@
           "summary": "El asistente de voz de Pier Repostería: catálogo, precios, promociones, horario y tu carrito, por voz.",
           "description": "Pier Asistente es el asistente oficial de Pier Repostería, repostería artesanal de Huejutla de Reyes, Hidalgo.\n\nSin necesidad de cuenta puedes:\n- Explorar el catálogo completo con precios reales, leído por partes a tu ritmo (continúa, resumen o basta).\n- Pedir recomendaciones y conocer lo más vendido de la semana.\n- Consultar las promociones vigentes, el horario (con estado abierto o cerrado en tiempo real), la ubicación y el teléfono.\n- Cotizar el envío a domicilio por colonia.\n- Preguntar lo que quieras sobre nuestros postres: el asistente responde con inteligencia artificial siempre fiel al catálogo real.\n\nSi vinculas tu cuenta de cliente (con un código de un solo uso que generas en tu perfil del sitio web) también puedes:\n- Armar tu carrito por voz: agregar, quitar, consultar y vaciar, con elección de tamaño.\n- Volver a pedir lo de siempre, revisar tus pedidos y el estado del más reciente.\n- Administrar tus favoritos y escuchar tus notificaciones.\n\nLa compra se confirma siempre en el sitio web: tu carrito armado por voz te espera ahí, sincronizado. La skill no procesa pagos.\n\nEn dispositivos con pantalla, cada respuesta se acompaña de una experiencia visual con fotografías reales de la sucursal y del catálogo, con interacción táctil.",
           "examplePhrases": [
-            "Alexa, abre pier repostería asistente",
-            "Alexa, pregúntale a pier repostería asistente qué me recomiendas",
-            "Alexa, pregúntale a pier repostería asistente qué promociones hay"
+            "Alexa, abre pier asistente",
+            "Alexa, pregúntale a pier asistente qué me recomiendas",
+            "Alexa, pregúntale a pier asistente qué promociones hay"
           ],
           "keywords": [
             "reposteria",

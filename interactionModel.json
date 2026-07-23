@@ -1,7 +1,7 @@
 {
   "interactionModel": {
     "languageModel": {
-      "invocationName": "pier repostería asistente",
+      "invocationName": "pier asistente",
       "intents": [
         {
           "name": "AMAZON.CancelIntent",

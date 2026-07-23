@@ -1,6 +1,6 @@
 # Pier Repostería Asistente · Guion de demostración
 
-**Skill de Alexa (español de México) para Pier Repostería** — certificada por Amazon y publicada en la Alexa Skills Store. Se abre diciendo *«Alexa, abre pier repostería asistente»*.
+**Skill de Alexa (español de México) para Pier Repostería** — certificada por Amazon y publicada en la Alexa Skills Store con el nombre **Pier Repostería Asistente**. Se abre diciendo *«Alexa, abre pier asistente»* (el nombre de invocación quedó fijado por Amazon en la primera publicación y ya no puede cambiarse).
 
 Pier Repostería Asistente es el escaparate por voz de la plataforma digital de Pier Repostería. Permite explorar el catálogo, armar el carrito de compras, dar seguimiento a los pedidos y operar el negocio con manos libres, según el rol de quien la usa. El pago y la confirmación de la compra se realizan siempre en el sitio web: el carrito que se arma por voz aparece sincronizado en la página, listo para completarse.
 
@@ -41,7 +41,7 @@ Cualquier persona puede consultar la repostería sin identificarse.
 
 | # | Qué decir o hacer | Qué debe suceder |
 |---|---|---|
-| 1 | «abre pier repostería asistente» | Pantalla de bienvenida con la **fotografía real de la sucursal** de fondo, el logotipo y la tipografía de la marca |
+| 1 | «abre pier asistente» | Pantalla de bienvenida con la **fotografía real de la sucursal** de fondo, el logotipo y la tipografía de la marca |
 | 2 | «qué categorías manejan» | Tarjetas táctiles con las categorías reales del catálogo |
 | 3 | **Tocar una categoría** | Lista de productos de esa categoría, con fotos y precios |
 | 4 | **Tocar un producto** | Ficha del producto con imagen, precios y el botón “Agregar al pedido” |
