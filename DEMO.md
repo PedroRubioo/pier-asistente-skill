@@ -1,8 +1,8 @@
-# Pier Asistente · Guion de demostración
+# Pier Repostería Asistente · Guion de demostración
 
-**Skill de Alexa (español de México) para Pier Repostería** — se abre diciendo *«Alexa, abre pier asistente»*.
+**Skill de Alexa (español de México) para Pier Repostería** — certificada por Amazon y publicada en la Alexa Skills Store. Se abre diciendo *«Alexa, abre pier repostería asistente»*.
 
-Pier Asistente es el escaparate por voz de la plataforma digital de Pier Repostería. Permite explorar el catálogo, armar el carrito de compras, dar seguimiento a los pedidos y operar el negocio con manos libres, según el rol de quien la usa. El pago y la confirmación de la compra se realizan siempre en el sitio web: el carrito que se arma por voz aparece sincronizado en la página, listo para completarse.
+Pier Repostería Asistente es el escaparate por voz de la plataforma digital de Pier Repostería. Permite explorar el catálogo, armar el carrito de compras, dar seguimiento a los pedidos y operar el negocio con manos libres, según el rol de quien la usa. El pago y la confirmación de la compra se realizan siempre en el sitio web: el carrito que se arma por voz aparece sincronizado en la página, listo para completarse.
 
 Este documento describe todo lo que la skill puede hacer, organizado por rol, junto con una secuencia de demostración para cada uno. Los pasos marcados con ⭐ son los momentos clave de la evaluación.
 
@@ -41,7 +41,7 @@ Cualquier persona puede consultar la repostería sin identificarse.
 
 | # | Qué decir o hacer | Qué debe suceder |
 |---|---|---|
-| 1 | «abre pier asistente» | Pantalla de bienvenida con la **fotografía real de la sucursal** de fondo, el logotipo y la tipografía de la marca |
+| 1 | «abre pier repostería asistente» | Pantalla de bienvenida con la **fotografía real de la sucursal** de fondo, el logotipo y la tipografía de la marca |
 | 2 | «qué categorías manejan» | Tarjetas táctiles con las categorías reales del catálogo |
 | 3 | **Tocar una categoría** | Lista de productos de esa categoría, con fotos y precios |
 | 4 | **Tocar un producto** | Ficha del producto con imagen, precios y el botón “Agregar al pedido” |

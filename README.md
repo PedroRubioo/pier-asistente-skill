@@ -1,4 +1,4 @@
-# Pier Asistente — Skill de Alexa
+# Pier Repostería Asistente — Skill de Alexa
 
 Asistente por voz de **Pier Repostería** (Huejutla de Reyes, Hidalgo). Skill es-MX
 para Echo Show y bocinas sin pantalla, conectada en vivo al backend de la

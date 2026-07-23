@@ -1,15 +1,36 @@
 {
   "interactionModel": {
     "languageModel": {
-      "invocationName": "pier asistente",
+      "invocationName": "pier repostería asistente",
       "intents": [
-        { "name": "AMAZON.CancelIntent", "samples": [] },
-        { "name": "AMAZON.HelpIntent", "samples": [] },
-        { "name": "AMAZON.StopIntent", "samples": [] },
-        { "name": "AMAZON.NavigateHomeIntent", "samples": [] },
-        { "name": "AMAZON.FallbackIntent", "samples": [] },
-        { "name": "AMAZON.YesIntent", "samples": [] },
-        { "name": "AMAZON.NoIntent", "samples": [] },
+        {
+          "name": "AMAZON.CancelIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.HelpIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.StopIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.NavigateHomeIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.FallbackIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.YesIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.NoIntent",
+          "samples": []
+        },
         {
           "name": "AMAZON.NextIntent",
           "samples": [
@@ -25,7 +46,6 @@
             "qué más hay"
           ]
         },
-
         {
           "name": "ResumirIntent",
           "slots": [],
@@ -43,12 +63,17 @@
             "resúmeme lo que falta"
           ]
         },
-
         {
           "name": "LoginEmpleadoIntent",
           "slots": [
-            { "name": "numero_empleado", "type": "AMAZON.NUMBER" },
-            { "name": "pin", "type": "AMAZON.NUMBER" }
+            {
+              "name": "numero_empleado",
+              "type": "AMAZON.NUMBER"
+            },
+            {
+              "name": "pin",
+              "type": "AMAZON.NUMBER"
+            }
           ],
           "samples": [
             "soy el empleado {numero_empleado} con pin {pin}",
@@ -69,11 +94,13 @@
             "acceso empleado {numero_empleado} pin {pin}"
           ]
         },
-
         {
           "name": "VincularCuentaIntent",
           "slots": [
-            { "name": "codigo", "type": "AMAZON.NUMBER" }
+            {
+              "name": "codigo",
+              "type": "AMAZON.NUMBER"
+            }
           ],
           "samples": [
             "vincula mi cuenta con el código {codigo}",
@@ -93,10 +120,19 @@
             "usa el código de vinculación {codigo}",
             "canjea el código {codigo}",
             "tengo un código de vinculación {codigo}",
-            "quiero vincular mi cuenta con el código {codigo}"
+            "quiero vincular mi cuenta con el código {codigo}",
+            "el código es {codigo}",
+            "es el código {codigo}",
+            "vincula esta alexa con el código {codigo}",
+            "vincula mi perfil con el código {codigo}",
+            "conéctame con el código {codigo}",
+            "quiero vincular con el código {codigo}",
+            "vincular mi cuenta {codigo}",
+            "mi código es el {codigo}",
+            "aquí está mi código {codigo}",
+            "te doy el código {codigo}"
           ]
         },
-
         {
           "name": "LogoutEmpleadoIntent",
           "slots": [],
@@ -111,10 +147,18 @@
             "cerrar mi cuenta",
             "ya no soy yo",
             "cambiar de usuario",
-            "ya terminé"
+            "ya terminé",
+            "cierra la sesión",
+            "cerrar la sesión",
+            "cierra mi sesión",
+            "salir de la cuenta",
+            "desvincula mi cuenta",
+            "desvincúlame",
+            "desconecta mi cuenta",
+            "quita mi cuenta de esta alexa",
+            "olvida mi cuenta"
           ]
         },
-
         {
           "name": "MisPedidosIntent",
           "slots": [],
@@ -130,10 +174,17 @@
             "mis órdenes",
             "cuántos pedidos tengo",
             "ver mis pedidos",
-            "checa mis pedidos"
+            "checa mis pedidos",
+            "checa mis órdenes",
+            "revisa mis pedidos",
+            "léeme mis pedidos",
+            "qué pedidos he hecho",
+            "cuáles pedidos tengo",
+            "dame mi historial",
+            "historial de compras",
+            "mis compras"
           ]
         },
-
         {
           "name": "EstadoUltimoPedidoIntent",
           "slots": [],
@@ -147,10 +198,20 @@
             "qué pasó con mi pedido",
             "dónde está mi pedido",
             "ya puedo recoger mi pedido",
-            "está listo lo que pedí"
+            "está listo lo que pedí",
+            "cómo va lo que pedí",
+            "qué pasó con lo que pedí",
+            "rastrea mi pedido",
+            "sigue mi pedido",
+            "dónde va mi pedido",
+            "cuándo estará mi pedido",
+            "estatus de mi pedido",
+            "cómo viene mi pedido",
+            "checa mi pedido",
+            "revisa mi pedido",
+            "mi pedido ya está listo"
           ]
         },
-
         {
           "name": "MisFavoritosIntent",
           "slots": [],
@@ -161,10 +222,15 @@
             "muéstrame mis favoritos",
             "dime mis favoritos",
             "ver mis favoritos",
-            "mis productos favoritos"
+            "mis productos favoritos",
+            "checa mis favoritos",
+            "léeme mis favoritos",
+            "cuáles favoritos tengo",
+            "qué guardé en favoritos",
+            "enséñame mis favoritos",
+            "dame mis favoritos"
           ]
         },
-
         {
           "name": "MiPerfilIntent",
           "slots": [],
@@ -177,10 +243,15 @@
             "cómo me llamo",
             "dime quién soy",
             "qué información tienen de mí",
-            "ver mi perfil"
+            "ver mi perfil",
+            "con quién estoy conectado",
+            "qué cuenta está activa",
+            "cuál es mi cuenta",
+            "quién está conectado",
+            "dime mi perfil",
+            "checa mi perfil"
           ]
         },
-
         {
           "name": "TamanoChicoIntent",
           "slots": [],
@@ -204,7 +275,6 @@
             "uno pequeño"
           ]
         },
-
         {
           "name": "TamanoGrandeIntent",
           "slots": [],
@@ -226,11 +296,13 @@
             "uno familiar"
           ]
         },
-
         {
           "name": "AgregarCarritoIntent",
           "slots": [
-            { "name": "producto", "type": "AMAZON.SearchQuery" }
+            {
+              "name": "producto",
+              "type": "AMAZON.SearchQuery"
+            }
           ],
           "samples": [
             "agrega {producto} al carrito",
@@ -277,14 +349,31 @@
             "agrégame uno",
             "agrégame dos",
             "quiero uno",
-            "quiero dos"
+            "quiero dos",
+            "cómprame {producto}",
+            "apúntame {producto}",
+            "apunta {producto}",
+            "agrégame {producto} por favor",
+            "échame {producto} al carrito",
+            "ponme {producto}",
+            "me pones {producto} en el carrito",
+            "me agregas {producto}",
+            "quiero pedir {producto}",
+            "quiero ordenar {producto}",
+            "ordena {producto}",
+            "añade {producto} a mi pedido",
+            "suma {producto} al carrito",
+            "llevo {producto}",
+            "me llevo {producto}"
           ]
         },
-
         {
           "name": "QuitarCarritoIntent",
           "slots": [
-            { "name": "producto", "type": "AMAZON.SearchQuery" }
+            {
+              "name": "producto",
+              "type": "AMAZON.SearchQuery"
+            }
           ],
           "samples": [
             "quita {producto} del carrito",
@@ -297,10 +386,17 @@
             "remueve {producto} del carrito",
             "ya no quiero {producto}",
             "quita {producto} de mi carrito",
-            "elimina {producto} de mi carrito"
+            "elimina {producto} de mi carrito",
+            "bórrame {producto} del carrito",
+            "quítame {producto}",
+            "borra {producto} de mi carrito",
+            "elimina {producto} del pedido",
+            "saca {producto} de mi carrito",
+            "me quitas {producto} del carrito",
+            "remueve {producto} de mi carrito",
+            "ya no llevo {producto}"
           ]
         },
-
         {
           "name": "PedirDeNuevoIntent",
           "slots": [],
@@ -313,14 +409,25 @@
             "qué compré la última vez",
             "mis compras anteriores",
             "qué he pedido antes",
-            "lo que siempre pido"
+            "lo que siempre pido",
+            "pídeme lo de siempre",
+            "quiero lo de siempre",
+            "lo mismo de siempre",
+            "repite mi último pedido",
+            "repite mi pedido anterior",
+            "vuelve a pedir lo mismo",
+            "qué he ordenado antes",
+            "qué compraba antes",
+            "lo que pedí la otra vez"
           ]
         },
-
         {
           "name": "AgregarFavoritoIntent",
           "slots": [
-            { "name": "producto", "type": "AMAZON.SearchQuery" }
+            {
+              "name": "producto",
+              "type": "AMAZON.SearchQuery"
+            }
           ],
           "samples": [
             "agrega {producto} a favoritos",
@@ -331,14 +438,22 @@
             "pon {producto} en favoritos",
             "pon {producto} en mis favoritos",
             "marca {producto} como favorito",
-            "quiero {producto} en mis favoritos"
+            "quiero {producto} en mis favoritos",
+            "guárdame {producto} en favoritos",
+            "añade {producto} a favoritos",
+            "añade {producto} a mis favoritos",
+            "agrégame {producto} en favoritos",
+            "márcame {producto} como favorito",
+            "pon a {producto} en mis favoritos"
           ]
         },
-
         {
           "name": "QuitarFavoritoIntent",
           "slots": [
-            { "name": "producto", "type": "AMAZON.SearchQuery" }
+            {
+              "name": "producto",
+              "type": "AMAZON.SearchQuery"
+            }
           ],
           "samples": [
             "quita {producto} de favoritos",
@@ -348,14 +463,20 @@
             "elimina {producto} de mis favoritos",
             "saca {producto} de mis favoritos",
             "borra {producto} de favoritos",
-            "ya no quiero {producto} en favoritos"
+            "ya no quiero {producto} en favoritos",
+            "quítame {producto} de mis favoritos",
+            "bórrame {producto} de favoritos",
+            "remueve {producto} de favoritos",
+            "elimina a {producto} de mis favoritos"
           ]
         },
-
         {
           "name": "CotizarEnvioIntent",
           "slots": [
-            { "name": "colonia", "type": "AMAZON.SearchQuery" }
+            {
+              "name": "colonia",
+              "type": "AMAZON.SearchQuery"
+            }
           ],
           "samples": [
             "cuánto cuesta el envío a {colonia}",
@@ -368,10 +489,16 @@
             "hay cobertura en {colonia}",
             "tienen cobertura en {colonia}",
             "cuál es la tarifa de envío a {colonia}",
-            "hacen entregas en {colonia}"
+            "hacen entregas en {colonia}",
+            "cuánto cobran por llevar a {colonia}",
+            "cuánto cuesta que lleven a {colonia}",
+            "hacen entregas a {colonia}",
+            "entregan en {colonia}",
+            "llegan hasta {colonia}",
+            "cuánto el envío a {colonia}",
+            "mandan pedidos a {colonia}"
           ]
         },
-
         {
           "name": "NotificacionesIntent",
           "slots": [],
@@ -384,14 +511,23 @@
             "qué hay de nuevo en mi cuenta",
             "novedades de mi cuenta",
             "léeme mis notificaciones",
-            "tengo avisos"
+            "tengo avisos",
+            "checa mis notificaciones",
+            "revisa mis notificaciones",
+            "qué avisos tengo",
+            "tengo algún aviso",
+            "hay notificaciones",
+            "dime mis notificaciones",
+            "qué me llegó"
           ]
         },
-
         {
           "name": "PedidosNegocioIntent",
           "slots": [
-            { "name": "estado", "type": "TIPO_ESTADO_PEDIDO" }
+            {
+              "name": "estado",
+              "type": "TIPO_ESTADO_PEDIDO"
+            }
           ],
           "samples": [
             "cuántos pedidos {estado} hay",
@@ -406,15 +542,31 @@
             "qué pedidos tenemos",
             "resumen de pedidos",
             "pedidos del negocio",
-            "cómo vamos hoy"
+            "cómo vamos hoy",
+            "checa los pedidos",
+            "revisa los pedidos",
+            "cómo están los pedidos",
+            "cómo andan los pedidos",
+            "qué pedidos hay",
+            "dame el resumen de pedidos",
+            "léeme los pedidos {estado}",
+            "dime los pedidos {estado}",
+            "checa los pedidos {estado}",
+            "cuántos pedidos {estado} tenemos",
+            "hay pedidos {estado} hoy"
           ]
         },
-
         {
           "name": "CambiarEstadoPedidoIntent",
           "slots": [
-            { "name": "numero", "type": "AMAZON.NUMBER" },
-            { "name": "nuevoEstado", "type": "TIPO_ESTADO_PEDIDO" }
+            {
+              "name": "numero",
+              "type": "AMAZON.NUMBER"
+            },
+            {
+              "name": "nuevoEstado",
+              "type": "TIPO_ESTADO_PEDIDO"
+            }
           ],
           "samples": [
             "marca el pedido {numero} como {nuevoEstado}",
@@ -426,14 +578,23 @@
             "el pedido {numero} ya está {nuevoEstado}",
             "pasa el pedido {numero} a {nuevoEstado}",
             "actualiza el pedido {numero} a {nuevoEstado}",
-            "cancela el pedido {numero}"
+            "cancela el pedido {numero}",
+            "cancela el pedido {numero} por favor",
+            "cancélame el pedido {numero}",
+            "dale {nuevoEstado} al pedido {numero}",
+            "cámbiame el pedido {numero} a {nuevoEstado}",
+            "pon como {nuevoEstado} el pedido {numero}",
+            "marca como {nuevoEstado} el pedido {numero}",
+            "el pedido {numero} pasa a {nuevoEstado}"
           ]
         },
-
         {
           "name": "DetallePedidoIntent",
           "slots": [
-            { "name": "numero", "type": "AMAZON.NUMBER" }
+            {
+              "name": "numero",
+              "type": "AMAZON.NUMBER"
+            }
           ],
           "samples": [
             "qué lleva el pedido {numero}",
@@ -443,14 +604,22 @@
             "de qué es el pedido {numero}",
             "qué pidió el pedido {numero}",
             "información del pedido {numero}",
-            "revisa el pedido {numero}"
+            "revisa el pedido {numero}",
+            "qué trae el pedido {numero}",
+            "qué contiene el pedido {numero}",
+            "checa el pedido {numero}",
+            "dime del pedido {numero}",
+            "muéstrame el pedido {numero}",
+            "léeme el pedido {numero}"
           ]
         },
-
         {
           "name": "AvisarDemoraIntent",
           "slots": [
-            { "name": "numero", "type": "AMAZON.NUMBER" }
+            {
+              "name": "numero",
+              "type": "AMAZON.NUMBER"
+            }
           ],
           "samples": [
             "avisa demora del pedido {numero}",
@@ -458,14 +627,21 @@
             "notifica demora del pedido {numero}",
             "avísale al cliente del pedido {numero} que hay demora",
             "el pedido {numero} va retrasado",
-            "manda aviso de demora del pedido {numero}"
+            "manda aviso de demora del pedido {numero}",
+            "avísale demora al pedido {numero}",
+            "reporta demora del pedido {numero}",
+            "el pedido {numero} se va a tardar",
+            "hay demora en el pedido {numero}",
+            "avisa que el pedido {numero} va tarde"
           ]
         },
-
         {
           "name": "EntregasIntent",
           "slots": [
-            { "name": "estadoEntrega", "type": "TIPO_ESTADO_ENTREGA" }
+            {
+              "name": "estadoEntrega",
+              "type": "TIPO_ESTADO_ENTREGA"
+            }
           ],
           "samples": [
             "qué entregas están {estadoEntrega}",
@@ -474,10 +650,18 @@
             "cómo van las entregas",
             "qué entregas hay",
             "tablero de entregas",
-            "cómo van los envíos"
+            "cómo van los envíos",
+            "checa las entregas",
+            "revisa las entregas",
+            "cómo andan las entregas",
+            "qué entregas tenemos",
+            "dame las entregas",
+            "entregas de hoy",
+            "cómo van los repartos",
+            "dime las entregas {estadoEntrega}",
+            "checa las entregas {estadoEntrega}"
           ]
         },
-
         {
           "name": "RepartidoresIntent",
           "slots": [],
@@ -487,15 +671,26 @@
             "hay repartidores disponibles",
             "quién puede repartir",
             "repartidores disponibles",
-            "quién está libre para entregar"
+            "quién está libre para entregar",
+            "checa los repartidores",
+            "quién anda repartiendo",
+            "qué repartidores están libres",
+            "quién está disponible para entregar",
+            "cuántos repartidores hay",
+            "dame los repartidores"
           ]
         },
-
         {
           "name": "AsignarRepartidorIntent",
           "slots": [
-            { "name": "numero", "type": "AMAZON.NUMBER" },
-            { "name": "repartidor", "type": "AMAZON.FirstName" }
+            {
+              "name": "numero",
+              "type": "AMAZON.NUMBER"
+            },
+            {
+              "name": "repartidor",
+              "type": "AMAZON.FirstName"
+            }
           ],
           "samples": [
             "asigna el pedido {numero} a {repartidor}",
@@ -503,10 +698,13 @@
             "dale el pedido {numero} a {repartidor}",
             "que {repartidor} lleve el pedido {numero}",
             "manda el pedido {numero} con {repartidor}",
-            "asigna a {repartidor} el pedido {numero}"
+            "asigna a {repartidor} el pedido {numero}",
+            "mándale el pedido {numero} a {repartidor}",
+            "asígnale a {repartidor} el pedido {numero}",
+            "ponle el pedido {numero} a {repartidor}",
+            "que {repartidor} entregue el pedido {numero}"
           ]
         },
-
         {
           "name": "ConsultarStockIntent",
           "slots": [],
@@ -519,15 +717,30 @@
             "cómo está el inventario",
             "cómo está el stock",
             "qué falta reponer",
-            "alertas de inventario"
+            "alertas de inventario",
+            "cómo anda el inventario",
+            "cómo va el inventario",
+            "checa el inventario",
+            "revisa el stock",
+            "qué se está acabando",
+            "qué anda escaso",
+            "qué hay agotado",
+            "qué productos faltan",
+            "hay algo agotado",
+            "qué necesita reponerse"
           ]
         },
-
         {
           "name": "ReponerStockIntent",
           "slots": [
-            { "name": "cantidad", "type": "AMAZON.NUMBER" },
-            { "name": "productoInventario", "type": "TIPO_PRODUCTO" }
+            {
+              "name": "cantidad",
+              "type": "AMAZON.NUMBER"
+            },
+            {
+              "name": "productoInventario",
+              "type": "TIPO_PRODUCTO"
+            }
           ],
           "samples": [
             "repón {cantidad} unidades de {productoInventario}",
@@ -543,14 +756,21 @@
             "suma {cantidad} unidades de {productoInventario} al inventario",
             "suma {cantidad} unidades del {productoInventario} al inventario",
             "mete {cantidad} unidades de {productoInventario} al stock",
-            "mete {cantidad} unidades del {productoInventario} al stock"
+            "mete {cantidad} unidades del {productoInventario} al stock",
+            "ponle {cantidad} unidades a {productoInventario}",
+            "ponle {cantidad} unidades al {productoInventario}",
+            "cárgale {cantidad} unidades a {productoInventario}",
+            "llegaron {cantidad} unidades de {productoInventario}",
+            "llegaron {cantidad} {productoInventario}"
           ]
         },
-
         {
           "name": "MarcarAgotadoIntent",
           "slots": [
-            { "name": "productoInventario", "type": "TIPO_PRODUCTO" }
+            {
+              "name": "productoInventario",
+              "type": "TIPO_PRODUCTO"
+            }
           ],
           "samples": [
             "marca {productoInventario} como agotado",
@@ -561,10 +781,15 @@
             "ya se acabó {productoInventario}",
             "se nos acabó {productoInventario}",
             "ya no queda {productoInventario}",
-            "agota {productoInventario} en línea"
+            "agota {productoInventario} en línea",
+            "ya no tenemos {productoInventario}",
+            "nos quedamos sin {productoInventario}",
+            "se terminó {productoInventario}",
+            "se terminó el {productoInventario}",
+            "ya se terminó {productoInventario}",
+            "no queda {productoInventario}"
           ]
         },
-
         {
           "name": "KpisNegocioIntent",
           "slots": [],
@@ -577,10 +802,17 @@
             "dame los kpis",
             "números históricos",
             "cómo va el negocio en total",
-            "estadísticas del negocio"
+            "estadísticas del negocio",
+            "cómo van los números",
+            "dame los números",
+            "cifras del negocio",
+            "dame las cifras del negocio",
+            "estadísticas generales",
+            "números de la empresa",
+            "datos del negocio",
+            "cómo está el negocio en números"
           ]
         },
-
         {
           "name": "ProductosTopIntent",
           "slots": [],
@@ -592,10 +824,15 @@
             "dame el ranking de ventas",
             "top de productos",
             "cuál es el producto estrella",
-            "qué es lo más vendido de la tienda"
+            "qué es lo más vendido de la tienda",
+            "cuál es el producto más vendido",
+            "qué productos se venden más",
+            "top de ventas",
+            "los productos top",
+            "qué es lo más comprado",
+            "ranking de los más vendidos"
           ]
         },
-
         {
           "name": "VentasSemanaIntent",
           "slots": [],
@@ -606,10 +843,15 @@
             "ventas semanales",
             "cómo nos fue esta semana",
             "resumen de la semana",
-            "cómo va la semana"
+            "cómo va la semana",
+            "cómo van las ventas semanales",
+            "cuánto se vendió esta semana",
+            "cuánto llevamos esta semana",
+            "dame las ventas de la semana",
+            "reporte semanal",
+            "resumen semanal"
           ]
         },
-
         {
           "name": "EquipoIntent",
           "slots": [],
@@ -621,10 +863,15 @@
             "cuántos repartidores tenemos",
             "cómo está el equipo",
             "cuánta gente trabaja aquí",
-            "cuántos usuarios tiene la plataforma"
+            "cuántos usuarios tiene la plataforma",
+            "cuánta gente tenemos",
+            "cómo está el personal",
+            "quiénes trabajan aquí",
+            "dame el equipo",
+            "cuántos trabajadores hay",
+            "cuántos usuarios tenemos"
           ]
         },
-
         {
           "name": "ResumenMesIntent",
           "slots": [],
@@ -636,10 +883,15 @@
             "reporte del mes",
             "cuánto hemos vendido este mes",
             "cómo cerró el mes pasado",
-            "dame el reporte ejecutivo"
+            "dame el reporte ejecutivo",
+            "cómo va el mes de ventas",
+            "cuánto se ha vendido este mes",
+            "cuánto llevamos este mes",
+            "dame el reporte mensual",
+            "resumen mensual",
+            "reporte de este mes"
           ]
         },
-
         {
           "name": "AuditoriaIntent",
           "slots": [],
@@ -651,10 +903,15 @@
             "bitácora del sistema",
             "qué ha pasado en el sistema",
             "quién ha hecho cambios",
-            "revisión de auditoría"
+            "revisión de auditoría",
+            "dame la bitácora",
+            "checa la auditoría",
+            "qué cambios hubo en el sistema",
+            "quién movió qué",
+            "registro de actividades",
+            "últimos movimientos del sistema"
           ]
         },
-
         {
           "name": "VentasHoyIntent",
           "slots": [],
@@ -665,10 +922,18 @@
             "ventas del día",
             "cómo van las ventas",
             "resumen del día",
-            "cuántos pedidos han entrado hoy"
+            "cuántos pedidos han entrado hoy",
+            "cuánto se ha vendido hoy",
+            "cuánto va de ventas hoy",
+            "cuánto llevamos hoy",
+            "cómo vamos de ventas",
+            "ventas de hoy",
+            "dame las ventas de hoy",
+            "dime las ventas",
+            "checa las ventas de hoy",
+            "cuántos pedidos van hoy"
           ]
         },
-
         {
           "name": "ConsultarCarritoIntent",
           "slots": [],
@@ -681,10 +946,24 @@
             "dime mi carrito",
             "qué tengo apartado",
             "cuántas cosas tengo en el carrito",
-            "qué he agregado"
+            "qué he agregado",
+            "checa mi carrito",
+            "revisa mi carrito",
+            "léeme mi carrito",
+            "cómo va mi carrito",
+            "qué llevo en el carrito",
+            "qué llevo hasta ahora",
+            "cuánto llevo en el carrito",
+            "cuánto va el carrito",
+            "cuál es el total de mi carrito",
+            "total del carrito",
+            "dime el total de mi carrito",
+            "qué hay en el carrito",
+            "muéstrame el carrito",
+            "enséñame mi carrito",
+            "cuánto es de mi carrito"
           ]
         },
-
         {
           "name": "VaciarCarritoIntent",
           "slots": [],
@@ -695,10 +974,16 @@
             "elimina todo del carrito",
             "borra todo lo del carrito",
             "quita todo del carrito",
-            "deja vacío mi carrito"
+            "deja vacío mi carrito",
+            "vacía el carrito",
+            "vacíame el carrito",
+            "borra mi carrito",
+            "limpia el carrito",
+            "elimina mi carrito",
+            "quiero empezar mi carrito de nuevo",
+            "borra todo mi carrito"
           ]
         },
-
         {
           "name": "MisResenasIntent",
           "slots": [],
@@ -712,7 +997,6 @@
             "ver mis reseñas"
           ]
         },
-
         {
           "name": "ConsultarCatalogoIntent",
           "slots": [],
@@ -753,10 +1037,27 @@
             "tienen catálogo",
             "qué tienen disponible",
             "qué hay disponible",
-            "qué tipo de cosas venden"
+            "qué tipo de cosas venden",
+            "muéstrame los productos",
+            "enséñame los productos",
+            "muéstrame lo que venden",
+            "enséñame lo que tienen",
+            "qué venden aquí",
+            "qué productos ofrecen",
+            "qué puedo comprar",
+            "qué puedo pedir",
+            "qué hay para comprar",
+            "léeme el catálogo",
+            "dime qué productos tienen",
+            "dime qué venden",
+            "qué postres ofrecen",
+            "cuáles son sus productos",
+            "cuáles son los productos",
+            "lista de productos",
+            "ver productos",
+            "todos los productos"
           ]
         },
-
         {
           "name": "ConsultarCategoriasIntent",
           "slots": [],
@@ -782,10 +1083,17 @@
             "qué secciones tienen",
             "qué variedades hay",
             "qué variedad tienen",
-            "qué variedad manejan"
+            "qué variedad manejan",
+            "qué secciones manejan",
+            "muéstrame las categorías",
+            "enséñame las categorías",
+            "ver categorías",
+            "cuáles categorías tienen",
+            "qué tipos de productos hay",
+            "qué tipos de postres venden",
+            "en qué se dividen los productos"
           ]
         },
-
         {
           "name": "ConsultarPromocionesIntent",
           "slots": [],
@@ -822,10 +1130,26 @@
             "hay ofertas relámpago",
             "qué cupones tienen",
             "tienen cupón",
-            "tienen algún cupón"
+            "tienen algún cupón",
+            "qué hay en oferta",
+            "qué está en oferta",
+            "qué está en descuento",
+            "qué anda en promoción",
+            "hay algo en oferta",
+            "hay algo rebajado",
+            "qué rebajas hay",
+            "dime las promociones",
+            "dime las ofertas",
+            "muéstrame las promociones",
+            "muéstrame las ofertas",
+            "cuáles son las promociones",
+            "cuáles son las ofertas",
+            "qué promociones están activas",
+            "promociones de hoy",
+            "ofertas de hoy",
+            "algo en promoción"
           ]
         },
-
         {
           "name": "ConsultarHorarioIntent",
           "slots": [],
@@ -858,10 +1182,24 @@
             "qué días trabajan",
             "qué días abren",
             "siguen atendiendo",
-            "atienden hoy"
+            "atienden hoy",
+            "están abiertos hoy",
+            "abren hoy",
+            "hoy están abiertos",
+            "hoy abren",
+            "a qué hora abren hoy",
+            "a qué hora cierran hoy",
+            "hasta qué hora están abiertos",
+            "hasta qué hora atienden",
+            "cuál es el horario de hoy",
+            "qué horario manejan",
+            "dime su horario",
+            "cuándo abren",
+            "cuándo están abiertos",
+            "qué días descansan",
+            "a qué hora está abierto"
           ]
         },
-
         {
           "name": "ConsultarUbicacionIntent",
           "slots": [],
@@ -901,10 +1239,22 @@
             "dame el teléfono",
             "cómo los contacto",
             "cómo contactarlos",
-            "cómo me comunico"
+            "cómo me comunico",
+            "dónde está la tienda",
+            "dónde queda la tienda",
+            "dónde está la repostería",
+            "dónde queda la repostería",
+            "dónde está la sucursal",
+            "dónde se encuentra la tienda",
+            "por dónde están",
+            "por dónde queda",
+            "cuál es el domicilio",
+            "dame su ubicación",
+            "dónde puedo encontrarlos",
+            "dónde es la tienda",
+            "ubicación de la tienda"
           ]
         },
-
         {
           "name": "ConsultarDestacadosIntent",
           "slots": [],
@@ -933,14 +1283,30 @@
             "los favoritos",
             "los destacados",
             "qué postre es bueno",
-            "qué pastel es bueno"
+            "qué pastel es bueno",
+            "qué está bueno",
+            "qué está rico",
+            "qué me ofreces",
+            "qué me conviene llevar",
+            "qué es lo mejor que tienen",
+            "qué es lo que más piden",
+            "cuál es el más pedido",
+            "cuál es el mejor postre",
+            "dame una recomendación",
+            "dame una sugerencia",
+            "qué sugieres",
+            "cuál me recomiendas",
+            "qué debería probar",
+            "qué vale la pena llevar"
           ]
         },
-
         {
           "name": "PreguntaPierIntent",
           "slots": [
-            { "name": "pregunta", "type": "AMAZON.SearchQuery" }
+            {
+              "name": "pregunta",
+              "type": "AMAZON.SearchQuery"
+            }
           ],
           "samples": [
             "quiero saber {pregunta}",
@@ -1832,17 +2198,69 @@
         {
           "name": "TIPO_ESTADO_ENTREGA",
           "values": [
-            { "name": { "value": "asignadas", "synonyms": ["asignada", "por salir", "asignados"] } },
-            { "name": { "value": "en camino", "synonyms": ["en ruta", "saliendo", "en reparto"] } }
+            {
+              "name": {
+                "value": "asignadas",
+                "synonyms": [
+                  "asignada",
+                  "por salir",
+                  "asignados"
+                ]
+              }
+            },
+            {
+              "name": {
+                "value": "en camino",
+                "synonyms": [
+                  "en ruta",
+                  "saliendo",
+                  "en reparto"
+                ]
+              }
+            }
           ]
         },
         {
           "name": "TIPO_ESTADO_PEDIDO",
           "values": [
-            { "name": { "value": "pendientes", "synonyms": ["pendiente", "sin atender", "nuevos"] } },
-            { "name": { "value": "listos", "synonyms": ["listo", "listos para recoger", "terminados"] } },
-            { "name": { "value": "completados", "synonyms": ["completado", "entregados", "finalizados"] } },
-            { "name": { "value": "cancelados", "synonyms": ["cancelado"] } }
+            {
+              "name": {
+                "value": "pendientes",
+                "synonyms": [
+                  "pendiente",
+                  "sin atender",
+                  "nuevos"
+                ]
+              }
+            },
+            {
+              "name": {
+                "value": "listos",
+                "synonyms": [
+                  "listo",
+                  "listos para recoger",
+                  "terminados"
+                ]
+              }
+            },
+            {
+              "name": {
+                "value": "completados",
+                "synonyms": [
+                  "completado",
+                  "entregados",
+                  "finalizados"
+                ]
+              }
+            },
+            {
+              "name": {
+                "value": "cancelados",
+                "synonyms": [
+                  "cancelado"
+                ]
+              }
+            }
           ]
         }
       ]
